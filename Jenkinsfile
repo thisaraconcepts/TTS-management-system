@@ -27,9 +27,9 @@ pipeline {
                     mkdir -p frontend-dist
                     cp -r frontend/dist/* frontend-dist/
                     
-                    # Copy to your live CloudPanel public directory
-                    # rm -rf $APP_DIR/public_html/*
-                    # cp -r frontend/dist/* $APP_DIR/public_html/
+                    # Live CloudPanel public directory deployment
+                    rm -rf $APP_DIR/public_html/*
+                    cp -r frontend/dist/* $APP_DIR/public_html/
                     
                     echo "Deployment completed successfully!"
                 '''
