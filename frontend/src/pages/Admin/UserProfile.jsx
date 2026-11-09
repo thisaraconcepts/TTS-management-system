@@ -145,7 +145,7 @@ export const UserProfile = () => {
 
           <div className="flex-grow-1 text-center text-md-start">
             <div className="d-flex flex-column flex-md-row align-items-center gap-2 mb-1">
-              <h3 className="mb-0 fw-bold text-dark display-font">{user.full_name}</h3>
+              <h3 className="mb-0 fw-bold text-body display-font">{user.full_name}</h3>
               <span className="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 fw-semibold">
                 {user.rank || 'N/A'}
               </span>

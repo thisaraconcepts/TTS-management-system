@@ -201,7 +201,7 @@ export const Navbar = ({ onToggleSidebar, isCollapsed }) => {
               </div>
             )}
             <div className="text-end d-none d-sm-block">
-              <div className="fw-semibold text-dark hover-primary" style={{ fontSize: '0.85rem' }}>{user?.full_name}</div>
+              <div className="fw-semibold text-body hover-primary" style={{ fontSize: '0.85rem' }}>{user?.full_name}</div>
               <div className="text-muted" style={{ fontSize: '0.7rem', fontWeight: 500 }}>{user?.role?.name}</div>
             </div>
           </Link>

@@ -251,7 +251,7 @@ export const ClassicalReportModal = ({
           </div>
 
           {/* Modal Body Container */}
-          <div className="modal-body p-2 p-sm-3 p-md-4 bg-light" style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+          <div className="modal-body p-2 p-sm-3 p-md-4" style={{ backgroundColor: 'var(--bg-app)', overflowY: 'auto', overflowX: 'hidden' }}>
             {/* Quick Search inside Modal (Hidden during print) */}
             <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 no-print">
               <small className="text-muted">
@@ -259,7 +259,7 @@ export const ClassicalReportModal = ({
               </small>
               <div style={{ minWidth: '200px', maxWidth: '300px', flex: '1 1 auto' }} className="ms-auto">
                 <div className="input-group input-group-sm shadow-xs">
-                  <span className="input-group-text bg-white border-end-0"><i className="bi bi-search text-muted"></i></span>
+                  <span className="input-group-text border-end-0"><i className="bi bi-search text-muted"></i></span>
                   <input
                     type="text"
                     className="form-control border-start-0"
@@ -268,7 +268,7 @@ export const ClassicalReportModal = ({
                     onChange={(e) => setFilterSearch(e.target.value)}
                   />
                   {filterSearch && (
-                    <button className="btn btn-outline-secondary border-start-0 bg-white" type="button" onClick={() => setFilterSearch('')}>
+                    <button className="btn btn-outline-secondary border-start-0" type="button" onClick={() => setFilterSearch('')}>
                       <i className="bi bi-x"></i>
                     </button>
                   )}

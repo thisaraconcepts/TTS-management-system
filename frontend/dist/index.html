@@ -9,10 +9,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-DXjA3EfE.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dcf5nhpT.css">
+    <script>
+      (function() {
+        try {
+          var theme = localStorage.getItem('theme') || 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.setAttribute('data-bs-theme', theme);
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-BFxpb9eV.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-0rJZHl_e.css">
   </head>
-  <body class="bg-light">
+  <body>
     <div id="root"></div>
   </body>
 </html>

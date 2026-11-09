@@ -10,6 +10,14 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const root = window.document.documentElement
     root.setAttribute('data-theme', theme)
+    root.setAttribute('data-bs-theme', theme)
+    if (theme === 'dark') {
+      root.classList.add('dark')
+      document.body.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+      document.body.classList.remove('dark')
+    }
     localStorage.setItem('theme', theme)
   }, [theme])
 

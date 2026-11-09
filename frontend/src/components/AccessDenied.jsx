@@ -40,7 +40,7 @@ export const AccessDenied = ({ moduleTitle, permissionCode, attemptedPath }) => 
           <span className="badge bg-danger text-white px-3 py-1.5 fw-bold text-uppercase mb-2 shadow-xs" style={{ letterSpacing: '0.08em', fontSize: '0.75rem' }}>
             <i className="bi bi-exclamation-octagon-fill me-1.5"></i> Access Restricted / Unauthorized
           </span>
-          <h2 className="display-font text-dark fw-bold mb-1">ACCESS DENIED</h2>
+          <h2 className="display-font text-body fw-bold mb-1">ACCESS DENIED</h2>
           <p className="text-muted small mb-0">
             Sri Lanka Air Force • Trade Training School Security Gateway
           </p>
@@ -50,7 +50,7 @@ export const AccessDenied = ({ moduleTitle, permissionCode, attemptedPath }) => 
         <div className="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 text-start p-3.5 mb-4 rounded-3">
           <div className="d-flex align-items-start gap-2.5">
             <i className="bi bi-shield-x fs-4 text-danger mt-0.5"></i>
-            <div className="small text-dark">
+            <div className="small text-body">
               <div className="fw-bold text-danger mb-1" style={{ fontSize: '0.9rem' }}>
                 You do not have the required security permissions to access this module.
               </div>
@@ -62,11 +62,11 @@ export const AccessDenied = ({ moduleTitle, permissionCode, attemptedPath }) => 
         </div>
 
         {/* Authorization Metadata Details */}
-        <div className="card bg-light border border-secondary border-opacity-10 text-start p-3 mb-4 rounded-3">
+        <div className="card slaf-card border text-start p-3 mb-4 rounded-3">
           <div className="row g-2 small">
             <div className="col-12 col-sm-6">
               <span className="text-muted d-block">Requested Module:</span>
-              <strong className="text-dark">{displayTitle}</strong>
+              <strong className="text-body">{displayTitle}</strong>
             </div>
             <div className="col-12 col-sm-6">
               <span className="text-muted d-block">Required Permission Code:</span>
@@ -74,7 +74,7 @@ export const AccessDenied = ({ moduleTitle, permissionCode, attemptedPath }) => 
             </div>
             <div className="col-12 col-sm-6 mt-2">
               <span className="text-muted d-block">Authenticated User:</span>
-              <span className="text-dark fw-semibold">{user?.full_name || 'Anonymous'}</span>
+              <span className="text-body fw-semibold">{user?.full_name || 'Anonymous'}</span>
               <small className="text-muted d-block">{user?.rank || 'Trainee/Staff'} ({user?.username})</small>
             </div>
             <div className="col-12 col-sm-6 mt-2">

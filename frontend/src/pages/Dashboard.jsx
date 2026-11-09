@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import { SYSTEM_MODULES, openModule, checkModuleAccess, isUserAdmin } from '../utils/navigation'
 import {
   Chart as ChartJS,
@@ -20,6 +21,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 export const Dashboard = () => {
   const { user, hasPermission, hasRole } = useAuth()
+  const { theme } = useTheme()
   const navigate = useNavigate()
   const [summary, setSummary] = useState(null)
   const [paradeMonitoring, setParadeMonitoring] = useState(null)
@@ -126,6 +128,9 @@ export const Dashboard = () => {
     ],
   }
 
+  const chartTextColor = theme === 'dark' ? '#f3f4f6' : '#1f2937'
+  const chartGridColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)'
+
   return (
     <div className="fade-in-slide">
       {/* Top Header */}
@@ -182,10 +187,10 @@ export const Dashboard = () => {
       {/* ══════════════════════════════════════════════════════════════
           CENTRAL MODULE LAUNCHER & WORKSPACE GATEWAY
       ══════════════════════════════════════════════════════════════ */}
-      <div className="card slaf-card p-4 mb-4 border-0 shadow-sm bg-white">
+      <div className="card slaf-card p-4 mb-4 border-0 shadow-sm">
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
           <div>
-            <h5 className="card-title mb-0 fw-bold display-font text-dark d-flex align-items-center gap-2">
+            <h5 className="card-title mb-0 fw-bold display-font text-body d-flex align-items-center gap-2">
               <i className="bi bi-grid-3x3-gap-fill text-primary"></i>
               SLAF TTS Operational Modules & Workspaces
             </h5>
@@ -239,7 +244,7 @@ export const Dashboard = () => {
                     </span>
                   </div>
 
-                  <h6 className="fw-bold text-dark mb-1" style={{ fontSize: '0.92rem' }}>
+                  <h6 className="fw-bold text-body mb-1" style={{ fontSize: '0.92rem' }}>
                     {mod.title}
                   </h6>
 
@@ -332,7 +337,7 @@ export const Dashboard = () => {
           <div className="card slaf-card p-3 p-sm-4 h-100 shadow-xs">
             <h5 className="card-title mb-3 fw-bold">Trainee Strength Distribution</h5>
             <div className="mx-auto position-relative" style={{ maxWidth: '320px', height: '260px' }}>
-              <Pie data={pieData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } } }} />
+              <Pie data={pieData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 }, color: chartTextColor } } } }} />
             </div>
           </div>
         </div>
@@ -340,7 +345,7 @@ export const Dashboard = () => {
           <div className="card slaf-card p-3 p-sm-4 h-100 shadow-xs">
             <h5 className="card-title mb-3 fw-bold">Performance & Accommodation</h5>
             <div className="position-relative" style={{ height: '260px' }}>
-              <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 } } } } }} />
+              <Bar data={barData} options={{ responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } }, y: { ticks: { color: chartTextColor }, grid: { color: chartGridColor } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 11 }, color: chartTextColor } } } }} />
             </div>
           </div>
         </div>
