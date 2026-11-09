@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { ClassroomAttendanceRegister } from './ClassroomAttendanceRegister'
@@ -12,9 +12,22 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
   const [subjects, setSubjects] = useState([])
   const [loading, setLoading] = useState(false)
 
-  // Exam Creation Modal
+  // Exam Creation Modal State
   const [showExamModal, setShowExamModal] = useState(false)
+  const [ongoingCourses, setOngoingCourses] = useState([])
+  const [loadingCourses, setLoadingCourses] = useState(false)
+  const [coursesError, setCoursesError] = useState(null)
+
+  const [modalSubjects, setModalSubjects] = useState([])
+  const [loadingModalSubjects, setLoadingModalSubjects] = useState(false)
+  const [modalSubjectsError, setModalSubjectsError] = useState(null)
+  const [submittingExam, setSubmittingExam] = useState(false)
+
+  // Track latest requested course ID for modal subjects to prevent race conditions / stale responses
+  const activeCourseRequestRef = useRef('')
+
   const [examForm, setExamForm] = useState({
+    course_id: '',
     subject_id: '',
     type: 'Phase Test',
     date: new Date().toISOString().split('T')[0],
@@ -43,13 +56,29 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get('/api/v1/academic/courses')
-      setCourses(res.data)
-      if (res.data.length > 0) {
+      // First attempt to load ongoing courses
+      const res = await axios.get('/api/v1/academic/courses/ongoing')
+      if (res.data && res.data.length > 0) {
+        setCourses(res.data)
         setSelectedCourseId(res.data[0].id)
+      } else {
+        const allRes = await axios.get('/api/v1/academic/courses')
+        setCourses(allRes.data || [])
+        if (allRes.data && allRes.data.length > 0) {
+          setSelectedCourseId(allRes.data[0].id)
+        }
       }
     } catch (err) {
-      console.error(err)
+      console.error('Failed to load ongoing courses, falling back to all courses', err)
+      try {
+        const allRes = await axios.get('/api/v1/academic/courses')
+        setCourses(allRes.data || [])
+        if (allRes.data && allRes.data.length > 0) {
+          setSelectedCourseId(allRes.data[0].id)
+        }
+      } catch (e) {
+        console.error('Failed to load courses', e)
+      }
     }
   }
 
@@ -70,6 +99,90 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
     }
   }
 
+  // Retrieve subjects dynamically for a selected course in the modal
+  const fetchModalSubjects = async (courseId) => {
+    if (!courseId) {
+      setModalSubjects([])
+      setLoadingModalSubjects(false)
+      setModalSubjectsError(null)
+      return
+    }
+
+    activeCourseRequestRef.current = courseId
+    setLoadingModalSubjects(true)
+    setModalSubjectsError(null)
+
+    try {
+      const res = await axios.get(`/api/v1/academic/courses/${courseId}/subjects`)
+      // Prevent stale response if user switched courses quickly
+      if (activeCourseRequestRef.current === courseId) {
+        setModalSubjects(res.data || [])
+      }
+    } catch (err) {
+      if (activeCourseRequestRef.current === courseId) {
+        console.error('Failed to load course subjects', err)
+        setModalSubjects([])
+        setModalSubjectsError('Failed to retrieve subjects for this course.')
+      }
+    } finally {
+      if (activeCourseRequestRef.current === courseId) {
+        setLoadingModalSubjects(false)
+      }
+    }
+  }
+
+  // Open Schedule Examination Modal and load ongoing courses
+  const handleOpenExamModal = async () => {
+    setShowExamModal(true)
+    setCoursesError(null)
+    setModalSubjectsError(null)
+    setModalSubjects([])
+    setLoadingCourses(true)
+
+    try {
+      const res = await axios.get('/api/v1/academic/courses/ongoing')
+      const ongoing = res.data || []
+      setOngoingCourses(ongoing)
+
+      // Determine initial course selection
+      let initialCourseId = ''
+      if (selectedCourseId && ongoing.some(c => c.id === selectedCourseId)) {
+        initialCourseId = selectedCourseId
+      } else if (ongoing.length > 0) {
+        initialCourseId = ongoing[0].id
+      }
+
+      setExamForm({
+        course_id: initialCourseId,
+        subject_id: '',
+        type: activeSubTab === 'final-exams' ? 'Final Exam' : 'Phase Test',
+        date: new Date().toISOString().split('T')[0],
+        max_marks: 100,
+        pass_marks: 50
+      })
+
+      if (initialCourseId) {
+        fetchModalSubjects(initialCourseId)
+      }
+    } catch (err) {
+      console.error('Failed to fetch ongoing courses', err)
+      setCoursesError('Failed to load ongoing courses. Please try again.')
+      toast.error('Failed to load ongoing courses for examination scheduling')
+    } finally {
+      setLoadingCourses(false)
+    }
+  }
+
+  // Handle course dropdown change in the modal
+  const handleModalCourseChange = (courseId) => {
+    setExamForm(prev => ({
+      ...prev,
+      course_id: courseId,
+      subject_id: '' // Clears previously selected subject when course changes
+    }))
+    fetchModalSubjects(courseId)
+  }
+
   useEffect(() => {
     fetchCourses()
   }, [])
@@ -86,17 +199,55 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
   const handleCreateExam = async (e) => {
     e.preventDefault()
-    if (!examForm.subject_id || !selectedCourseId) return
+
+    if (!examForm.course_id) {
+      toast.warning('Please select an ongoing course.')
+      return
+    }
+    if (!examForm.subject_id) {
+      toast.warning('Please select a subject / module.')
+      return
+    }
+    if (!examForm.date) {
+      toast.warning('Please choose an examination date.')
+      return
+    }
+    if (Number(examForm.max_marks) <= 0) {
+      toast.warning('Maximum marks must be greater than 0.')
+      return
+    }
+    if (Number(examForm.pass_marks) < 0 || Number(examForm.pass_marks) > Number(examForm.max_marks)) {
+      toast.warning('Pass marks must be between 0 and maximum marks.')
+      return
+    }
+
+    setSubmittingExam(true)
     try {
       await axios.post('/api/v1/academic/exams', {
-        ...examForm,
-        course_id: selectedCourseId
+        course_id: examForm.course_id,
+        subject_id: examForm.subject_id,
+        type: examForm.type,
+        date: examForm.date,
+        max_marks: Number(examForm.max_marks),
+        pass_marks: Number(examForm.pass_marks)
       })
+
       toast.success(`${examForm.type} scheduled successfully`)
       setShowExamModal(false)
-      fetchExamsAndSubjects(selectedCourseId)
+
+      // Ensure the course where exam was scheduled is displayed
+      if (selectedCourseId !== examForm.course_id) {
+        setSelectedCourseId(examForm.course_id)
+      } else {
+        fetchExamsAndSubjects(selectedCourseId)
+      }
     } catch (err) {
-      toast.error('Failed to schedule examination')
+      console.error('Failed to schedule examination', err)
+      const detail = err.response?.data?.detail
+      const msg = typeof detail === 'string' ? detail : 'Failed to schedule examination'
+      toast.error(msg)
+    } finally {
+      setSubmittingExam(false)
     }
   }
 
@@ -442,10 +593,10 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
       </div>
 
       {/* Course Selector & Actions */}
-      <div className="card slaf-card p-3 mb-3 shadow-sm border-0 bg-white">
+      <div className="card slaf-card p-3 mb-3 shadow-sm border-0">
         <div className="row align-items-center g-2">
           <div className="col-12 col-md-3">
-            <label className="fw-bold text-dark small">Select Course / Specialization:</label>
+            <label className="fw-bold text-body small">Select Course / Specialization:</label>
           </div>
           <div className="col-12 col-sm-8 col-md-6">
             <select
@@ -460,7 +611,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
           </div>
           <div className="col-12 col-sm-4 col-md-3 text-start text-sm-end">
             {(activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
-              <button className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto" onClick={() => setShowExamModal(true)}>
+              <button className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto" onClick={handleOpenExamModal}>
                 <i className="bi bi-journal-plus me-1"></i> Schedule Exam
               </button>
             )}
@@ -595,51 +746,212 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
         <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
           <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content slaf-card shadow-lg border-0">
-              <div className="modal-header border-bottom bg-light">
-                <h5 className="modal-title display-font text-primary fw-bold">
-                  <i className="bi bi-calendar-plus me-2"></i>Schedule Examination
-                </h5>
-                <button type="button" className="btn-close" onClick={() => setShowExamModal(false)}></button>
+              <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between">
+                <div>
+                  <h5 className="modal-title display-font text-primary fw-bold mb-0">
+                    <i className="bi bi-calendar-plus me-2"></i>Schedule Examination
+                  </h5>
+                  <small className="text-muted" style={{ fontSize: '0.78rem' }}>
+                    Select an ongoing training course and its assigned syllabus subject/module
+                  </small>
+                </div>
+                <button type="button" className="btn-close" onClick={() => setShowExamModal(false)} aria-label="Close"></button>
               </div>
               <form onSubmit={handleCreateExam}>
                 <div className="modal-body p-3 p-md-4">
+                  {/* Ongoing Course Selector */}
                   <div className="mb-3">
-                    <label className="form-label small fw-bold text-dark">Exam Type*</label>
-                    <select className="form-select" value={examForm.type} onChange={(e) => setExamForm({ ...examForm, type: e.target.value })}>
+                    <div className="d-flex justify-content-between align-items-center mb-1">
+                      <label className="form-label small fw-bold text-body mb-0">
+                        Course / Specialization*
+                      </label>
+                      {loadingCourses && (
+                        <span className="small text-muted d-flex align-items-center gap-1">
+                          <span className="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+                          <span>Loading ongoing courses...</span>
+                        </span>
+                      )}
+                    </div>
+                    <select
+                      className="form-select"
+                      value={examForm.course_id}
+                      onChange={(e) => handleModalCourseChange(e.target.value)}
+                      disabled={loadingCourses || submittingExam}
+                      required
+                    >
+                      {loadingCourses ? (
+                        <option value="">Loading ongoing courses...</option>
+                      ) : ongoingCourses.length === 0 ? (
+                        <option value="">-- No Ongoing Courses Available --</option>
+                      ) : (
+                        <>
+                          <option value="">-- Select Ongoing Course --</option>
+                          {ongoingCourses.map(c => (
+                            <option key={c.id} value={c.id}>
+                              {c.name} ({c.code}){c.trade_name ? ` • ${c.trade_name}` : ''}
+                            </option>
+                          ))}
+                        </>
+                      )}
+                    </select>
+
+                    {coursesError && (
+                      <div className="text-danger small mt-1 d-flex align-items-center gap-1">
+                        <i className="bi bi-exclamation-circle-fill"></i>
+                        <span>{coursesError}</span>
+                      </div>
+                    )}
+
+                    {!loadingCourses && ongoingCourses.length === 0 && !coursesError && (
+                      <div className="alert alert-warning py-1.5 px-2.5 small mt-2 mb-0 d-flex align-items-center gap-2">
+                        <i className="bi bi-exclamation-triangle-fill text-warning flex-shrink-0"></i>
+                        <span>No active ongoing courses found in the academic registry. Examinations can only be scheduled for ongoing courses.</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Dependent Subject / Module Selector */}
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between align-items-center mb-1">
+                      <label className="form-label small fw-bold text-body mb-0">
+                        Select Subject / Module*
+                      </label>
+                      {loadingModalSubjects && (
+                        <span className="small text-muted d-flex align-items-center gap-1">
+                          <span className="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+                          <span>Loading subjects...</span>
+                        </span>
+                      )}
+                    </div>
+                    <select
+                      className="form-select"
+                      value={examForm.subject_id}
+                      onChange={(e) => setExamForm({ ...examForm, subject_id: e.target.value })}
+                      disabled={!examForm.course_id || loadingModalSubjects || loadingCourses || modalSubjects.length === 0 || submittingExam}
+                      required
+                    >
+                      {!examForm.course_id ? (
+                        <option value="">-- Please Select Course First --</option>
+                      ) : loadingModalSubjects ? (
+                        <option value="">Loading course subjects...</option>
+                      ) : modalSubjects.length === 0 ? (
+                        <option value="">-- No Subjects Assigned to Course --</option>
+                      ) : (
+                        <>
+                          <option value="">-- Select Subject / Module --</option>
+                          {modalSubjects.map(s => (
+                            <option key={s.id} value={s.id}>
+                              {s.name} ({s.code}){s.periods ? ` • ${s.periods} Periods` : ''}
+                            </option>
+                          ))}
+                        </>
+                      )}
+                    </select>
+
+                    {modalSubjectsError && (
+                      <div className="text-danger small mt-1 d-flex align-items-center gap-1">
+                        <i className="bi bi-exclamation-circle-fill"></i>
+                        <span>{modalSubjectsError}</span>
+                      </div>
+                    )}
+
+                    {examForm.course_id && !loadingModalSubjects && modalSubjects.length === 0 && !modalSubjectsError && (
+                      <div className="alert alert-info py-1.5 px-2.5 small mt-2 mb-0 d-flex align-items-center gap-2">
+                        <i className="bi bi-info-circle-fill text-info flex-shrink-0"></i>
+                        <span>No subjects/modules are assigned to this course.</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Exam Type Selector */}
+                  <div className="mb-3">
+                    <label className="form-label small fw-bold text-body">Exam Type*</label>
+                    <select
+                      className="form-select"
+                      value={examForm.type}
+                      onChange={(e) => setExamForm({ ...examForm, type: e.target.value })}
+                      disabled={submittingExam}
+                    >
                       <option value="Phase Test">Phase Test</option>
                       <option value="Final Exam">Final Examination</option>
                     </select>
                   </div>
+
+                  {/* Exam Date */}
                   <div className="mb-3">
-                    <label className="form-label small fw-bold text-dark">Select Subject / Module*</label>
-                    <select className="form-select" value={examForm.subject_id} onChange={(e) => setExamForm({ ...examForm, subject_id: e.target.value })} required>
-                      <option value="">-- Select Subject --</option>
-                      {subjects.map(s => (
-                        <option key={s.id} value={s.id}>{s.name} ({s.code})</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label small fw-bold text-dark">Exam Date*</label>
-                    <input type="date" className="form-control" value={examForm.date} onChange={(e) => setExamForm({ ...examForm, date: e.target.value })} required />
-                    <small className="text-muted" style={{ fontSize: '0.75rem' }}>
-                      <i className="bi bi-info-circle me-1"></i>Trainees' approved Parade State on this specific date will automatically dictate exam eligibility.
+                    <label className="form-label small fw-bold text-body">Exam Date*</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={examForm.date}
+                      onChange={(e) => setExamForm({ ...examForm, date: e.target.value })}
+                      disabled={submittingExam}
+                      required
+                    />
+                    <small className="text-muted d-block mt-1" style={{ fontSize: '0.75rem' }}>
+                      <i className="bi bi-info-circle me-1 text-primary"></i>
+                      Trainees' approved Parade State on this specific date will automatically dictate exam eligibility.
                     </small>
                   </div>
+
+                  {/* Max Marks & Pass Marks */}
                   <div className="row g-2">
                     <div className="col-6">
-                      <label className="form-label small fw-bold text-dark">Max Marks</label>
-                      <input type="number" className="form-control" value={examForm.max_marks} onChange={(e) => setExamForm({ ...examForm, max_marks: parseFloat(e.target.value) || 0 })} />
+                      <label className="form-label small fw-bold text-body">Max Marks</label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="any"
+                        className="form-control"
+                        value={examForm.max_marks}
+                        onChange={(e) => setExamForm({ ...examForm, max_marks: parseFloat(e.target.value) || 0 })}
+                        disabled={submittingExam}
+                        required
+                      />
                     </div>
                     <div className="col-6">
-                      <label className="form-label small fw-bold text-dark">Pass Marks</label>
-                      <input type="number" className="form-control" value={examForm.pass_marks} onChange={(e) => setExamForm({ ...examForm, pass_marks: parseFloat(e.target.value) || 0 })} />
+                      <label className="form-label small fw-bold text-body">Pass Marks</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max={examForm.max_marks || 100}
+                        step="any"
+                        className="form-control"
+                        value={examForm.pass_marks}
+                        onChange={(e) => setExamForm({ ...examForm, pass_marks: parseFloat(e.target.value) || 0 })}
+                        disabled={submittingExam}
+                        required
+                      />
                     </div>
                   </div>
                 </div>
-                <div className="modal-footer border-top bg-light d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
-                  <button type="button" className="btn btn-outline-secondary btn-sm w-100 w-sm-auto" onClick={() => setShowExamModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto">Schedule Exam</button>
+
+                <div className="modal-footer border-top bg-light-subtle d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
+                    onClick={() => setShowExamModal(false)}
+                    disabled={submittingExam}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto"
+                    disabled={submittingExam || loadingCourses || loadingModalSubjects || !examForm.course_id || !examForm.subject_id || modalSubjects.length === 0}
+                  >
+                    {submittingExam ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                        Scheduling Exam...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-calendar-check me-1"></i>
+                        Schedule Exam
+                      </>
+                    )}
+                  </button>
                 </div>
               </form>
             </div>

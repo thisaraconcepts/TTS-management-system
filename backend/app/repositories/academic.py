@@ -39,16 +39,14 @@ class ClassroomRepository(BaseRepository[Classroom]):
 class CourseRepository(BaseRepository[Course]):
     def get_all(self, db: Session, status: Optional[str] = None) -> List[Course]:
         from app.schemas.academic import calculate_duration_from_dates, get_date_aware_status
+        if status and status.upper() in ["ONGOING", "ACTIVE"]:
+            return self.get_ongoing_courses(db)
+
         query = db.query(Course).filter(Course.deleted_at == None)
         if status and status.upper() != "ALL":
             st = status.upper()
             if st in ["PASSED OUT", "PASSED_OUT", "COMPLETED"]:
                 query = query.filter(Course.status.in_(['PASSED OUT', 'PASSED_OUT', 'COMPLETED']))
-            elif st in ["ONGOING", "ACTIVE"]:
-                query = query.filter(
-                    Course.is_active == True,
-                    Course.status.in_(['ONGOING', 'Active', 'ACTIVE', None])
-                )
             elif st == "UPCOMING":
                 query = query.filter(Course.status == 'UPCOMING')
             else:
@@ -65,6 +63,33 @@ class CourseRepository(BaseRepository[Course]):
                 c.duration_formatted = f"{c.duration_weeks} Weeks" if c.duration_weeks else "N/A"
             c.date_status = get_date_aware_status(c.start_date, c.end_date, c.status or ("Active" if c.is_active else "Inactive"))
         return results
+
+    def get_ongoing_courses(self, db: Session) -> List[Course]:
+        from app.schemas.academic import calculate_duration_from_dates, get_date_aware_status
+        courses = (
+            db.query(Course)
+            .filter(
+                Course.deleted_at == None,
+                Course.is_active == True,
+                ~Course.status.in_(['PASSED OUT', 'PASSED_OUT', 'COMPLETED', 'ARCHIVED', 'INACTIVE', 'CANCELLED', 'UPCOMING'])
+            )
+            .order_by(Course.code.asc(), Course.name.asc())
+            .all()
+        )
+        ongoing_list = []
+        for c in courses:
+            date_status = get_date_aware_status(c.start_date, c.end_date, c.status or "ONGOING")
+            if date_status == "ONGOING":
+                trade = db.query(Trade).filter(Trade.id == c.trade_id).first() if c.trade_id else None
+                c.trade_name = trade.label if trade else "General"
+                c.batches_count = db.query(Batch).filter(Batch.course_id == c.id).count()
+                if c.start_date and c.end_date:
+                    _, c.duration_formatted = calculate_duration_from_dates(c.start_date, c.end_date)
+                else:
+                    c.duration_formatted = f"{c.duration_weeks} Weeks" if c.duration_weeks else "N/A"
+                c.date_status = "ONGOING"
+                ongoing_list.append(c)
+        return ongoing_list
 
     def get_by_id(self, db: Session, id: str) -> Optional[Course]:
         from app.schemas.academic import calculate_duration_from_dates, get_date_aware_status

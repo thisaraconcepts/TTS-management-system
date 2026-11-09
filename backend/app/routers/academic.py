@@ -205,7 +205,20 @@ def get_courses(
 ):
     if trade_id and trade_id.strip():
         return course_repo.get_by_trade(db, trade_id.strip(), status=status)
+    if status and status.upper() in ["ONGOING", "ACTIVE"]:
+        return course_repo.get_ongoing_courses(db)
     return course_repo.get_all(db, status=status)
+
+@router.get("/courses/ongoing", response_model=List[CourseResponse])
+def get_ongoing_courses(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(PermissionChecker("academic:read"))
+):
+    """
+    Retrieves all currently ongoing courses based on active flag, status, and date-aware calculations.
+    Excludes upcoming, completed, passed-out, archived, and inactive courses.
+    """
+    return course_repo.get_ongoing_courses(db)
 
 @router.get("/courses/passed-out")
 def get_passed_out_courses(
@@ -536,12 +549,17 @@ def get_instructors_from_user_management(
 
 
 # --- 7. Subjects & Lessons ---
+@router.get("/courses/{course_id}/subjects", response_model=List[SubjectResponse])
 @router.get("/subjects/{course_id}", response_model=List[SubjectResponse])
 def get_subjects(
     course_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(PermissionChecker("academic:read"))
 ):
+    from app.models.academic import Course
+    course = db.query(Course).filter(Course.id == course_id, Course.deleted_at == None).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
     return subject_repo.get_by_course(db, course_id)
 
 @router.post("/subjects", response_model=SubjectResponse)
@@ -745,22 +763,80 @@ def create_exam(
     db: Session = Depends(get_db),
     current_user: User = Depends(PermissionChecker("academic:write"))
 ):
-    from app.models.academic import Exam, Course
-    course = db.query(Course).filter(Course.id == exam_data.course_id).first()
-    if course:
-        if course.start_date and exam_data.date < course.start_date:
+    from app.models.academic import Exam, Course, Subject
+    from app.schemas.academic import get_date_aware_status
+
+    # 1. Validate Course exists
+    course = db.query(Course).filter(Course.id == exam_data.course_id, Course.deleted_at == None).first()
+    if not course:
+        raise HTTPException(
+            status_code=404,
+            detail="The selected course was not found."
+        )
+
+    # 2. Validate Course is active and eligible for scheduling
+    if not course.is_active:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Course '{course.name}' is inactive and cannot have examinations scheduled."
+        )
+    if course.status and course.status.upper() in ["ARCHIVED", "CANCELLED"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot schedule examination: Course '{course.name}' is {course.status.lower()}."
+        )
+
+    # 3. Validate Exam Date within course timeframe if configured
+    if course.start_date and exam_data.date < course.start_date:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Exam date ({exam_data.date.strftime('%d.%m.%Y')}) cannot be earlier than course start date ({course.start_date.strftime('%d.%m.%Y')})."
+        )
+    if course.end_date and exam_data.date > course.end_date:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Exam date ({exam_data.date.strftime('%d.%m.%Y')}) cannot be later than course end date ({course.end_date.strftime('%d.%m.%Y')})."
+        )
+
+    # 4. Validate Subject exists and belongs to the selected course
+    subject = db.query(Subject).filter(
+        Subject.id == exam_data.subject_id,
+        Subject.course_id == course.id,
+        Subject.deleted_at == None
+    ).first()
+    if not subject:
+        other_subject = db.query(Subject).filter(
+            Subject.id == exam_data.subject_id,
+            Subject.deleted_at == None
+        ).first()
+        if other_subject:
             raise HTTPException(
                 status_code=400,
-                detail=f"Exam date ({exam_data.date.strftime('%d.%m.%Y')}) cannot be earlier than course start date ({course.start_date.strftime('%d.%m.%Y')})."
+                detail=f"The selected subject does not belong to course '{course.name}'."
             )
-        if course.end_date and exam_data.date > course.end_date:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Exam date ({exam_data.date.strftime('%d.%m.%Y')}) cannot be later than course end date ({course.end_date.strftime('%d.%m.%Y')})."
-            )
+        raise HTTPException(
+            status_code=404,
+            detail="The selected subject was not found."
+        )
+
+    # 5. Validate Exam Type
+    if not exam_data.type or exam_data.type.strip() not in ["Phase Test", "Final Exam"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid examination type. Must be 'Phase Test' or 'Final Exam'."
+        )
+
+    # 6. Validate Marks
+    if exam_data.max_marks <= 0:
+        raise HTTPException(status_code=400, detail="Maximum marks must be greater than 0.")
+    if exam_data.pass_marks < 0 or exam_data.pass_marks > exam_data.max_marks:
+        raise HTTPException(status_code=400, detail="Pass marks must be between 0 and maximum marks.")
 
     db_exam = Exam(**exam_data.model_dump())
-    return exam_repo.create(db, obj_in=db_exam)
+    created_exam = exam_repo.create(db, obj_in=db_exam)
+    created_exam.course_name = course.name
+    created_exam.subject_name = subject.name
+    return created_exam
 
 @router.get("/exam-marks/{exam_id}", response_model=List[ExamMarkResponse])
 def get_exam_grades(
