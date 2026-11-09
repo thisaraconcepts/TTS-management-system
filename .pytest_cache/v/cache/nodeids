@@ -26,6 +26,7 @@
   "backend/tests/test_enterprise_reporting.py::test_report_audit_logging",
   "backend/tests/test_enterprise_reporting.py::test_reports_rbac_security",
   "backend/tests/test_enterprise_reporting.py::test_student_dossier_report",
+  "backend/tests/test_exam_scheduling_courses_subjects.py::test_ongoing_course_endpoint_and_filtering",
   "backend/tests/test_night_parade.py::test_01_to_05_status_comparison_and_transitions",
   "backend/tests/test_night_parade.py::test_06_night_parade_opened_before_morning_parade_exists",
   "backend/tests/test_night_parade.py::test_09_to_10_submission_and_approval_workflow",

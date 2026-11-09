@@ -113,16 +113,25 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
     setModalSubjectsError(null)
 
     try {
-      const res = await axios.get(`/api/v1/academic/courses/${courseId}/subjects`)
+      let subs = []
+      try {
+        const res = await axios.get(`/api/v1/academic/courses/${courseId}/subjects`, { timeout: 8000 })
+        subs = res.data || []
+      } catch (e1) {
+        console.warn(`Primary subject fetch failed for ${courseId}, trying alias endpoint:`, e1)
+        const resAlias = await axios.get(`/api/v1/academic/subjects/${courseId}`, { timeout: 8000 })
+        subs = resAlias.data || []
+      }
+
       // Prevent stale response if user switched courses quickly
       if (activeCourseRequestRef.current === courseId) {
-        setModalSubjects(res.data || [])
+        setModalSubjects(subs)
       }
     } catch (err) {
       if (activeCourseRequestRef.current === courseId) {
         console.error('Failed to load course subjects', err)
         setModalSubjects([])
-        setModalSubjectsError('Failed to retrieve subjects for this course.')
+        setModalSubjectsError('Failed to retrieve subjects for this course. Please try again.')
       }
     } finally {
       if (activeCourseRequestRef.current === courseId) {
@@ -140,8 +149,31 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
     setLoadingCourses(true)
 
     try {
-      const res = await axios.get('/api/v1/academic/courses/ongoing')
-      const ongoing = res.data || []
+      let ongoing = []
+      try {
+        const res = await axios.get('/api/v1/academic/courses/ongoing', { timeout: 8000 })
+        ongoing = res.data || []
+      } catch (e1) {
+        console.warn('GET /academic/courses/ongoing failed, trying fallback to /courses?status=ONGOING...', e1)
+        try {
+          const fallbackRes = await axios.get('/api/v1/academic/courses?status=ONGOING', { timeout: 8000 })
+          ongoing = fallbackRes.data || []
+        } catch (e2) {
+          console.warn('Fallback to /courses?status=ONGOING failed, trying /courses...', e2)
+          const allRes = await axios.get('/api/v1/academic/courses', { timeout: 8000 })
+          const allList = allRes.data || []
+          ongoing = allList.filter(c => c.is_active && !['PASSED OUT', 'PASSED_OUT', 'COMPLETED', 'ARCHIVED', 'CANCELLED'].includes(c.status))
+        }
+      }
+
+      // If still empty but main courses state has items, use active courses from state
+      if (ongoing.length === 0 && courses.length > 0) {
+        const fromState = courses.filter(c => c.is_active && !['PASSED OUT', 'PASSED_OUT', 'COMPLETED', 'ARCHIVED', 'CANCELLED'].includes(c.status))
+        if (fromState.length > 0) {
+          ongoing = fromState
+        }
+      }
+
       setOngoingCourses(ongoing)
 
       // Determine initial course selection
@@ -796,9 +828,19 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                     </select>
 
                     {coursesError && (
-                      <div className="text-danger small mt-1 d-flex align-items-center gap-1">
-                        <i className="bi bi-exclamation-circle-fill"></i>
-                        <span>{coursesError}</span>
+                      <div className="text-danger small mt-1 d-flex align-items-center justify-content-between">
+                        <div className="d-flex align-items-center gap-1">
+                          <i className="bi bi-exclamation-circle-fill"></i>
+                          <span>{coursesError}</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger btn-sm py-0 px-2 fw-semibold"
+                          style={{ fontSize: '0.72rem' }}
+                          onClick={handleOpenExamModal}
+                        >
+                          Retry
+                        </button>
                       </div>
                     )}
 
@@ -849,9 +891,19 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                     </select>
 
                     {modalSubjectsError && (
-                      <div className="text-danger small mt-1 d-flex align-items-center gap-1">
-                        <i className="bi bi-exclamation-circle-fill"></i>
-                        <span>{modalSubjectsError}</span>
+                      <div className="text-danger small mt-1 d-flex align-items-center justify-content-between">
+                        <div className="d-flex align-items-center gap-1">
+                          <i className="bi bi-exclamation-circle-fill"></i>
+                          <span>{modalSubjectsError}</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger btn-sm py-0 px-2 fw-semibold"
+                          style={{ fontSize: '0.72rem' }}
+                          onClick={() => fetchModalSubjects(examForm.course_id)}
+                        >
+                          Retry
+                        </button>
                       </div>
                     )}
 
