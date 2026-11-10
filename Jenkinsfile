@@ -23,15 +23,12 @@ pipeline {
                 sh '''
                     echo "Preparing deployment files..."
                     
-                    # Ensure target directory exists on the host via the bound volume
-                    sudo mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html
+                    # Ensure target directory exists
+                    mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html
                     
                     echo "Copying build files to web root..."
-                    sudo rm -rf /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/*
-                    sudo cp -r frontend/dist/* /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/
-                    
-                    # Fix ownership so CloudPanel/Nginx can serve the files properly
-                    sudo chown -R itwekala-ttsmp:itwekala-ttsmp /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html
+                    rm -rf /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/*
+                    cp -r frontend/dist/* /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/
                     
                     echo "Deployment completed successfully!"
                 '''
