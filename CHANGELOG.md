@@ -199,3 +199,4 @@ flowchart LR
 - **MINOR (0.X.0)**: New functional modules, additional reporting capabilities, or substantial backward-compatible system enhancements.
 - **PATCH (0.0.X)**: Bug fixes, UI/UX responsiveness corrections, performance indexing, or security patches.
 - **Pre-Release (-rc.X, -beta.X)**: Staging builds undergoing user acceptance testing prior to official military production sign-off.
+
