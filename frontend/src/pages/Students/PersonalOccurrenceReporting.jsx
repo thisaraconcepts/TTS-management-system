@@ -28,17 +28,6 @@ export const PersonalOccurrenceReporting = ({ initialTraineeId = null }) => {
   const [editingOccurrence, setEditingOccurrence] = useState(null)
   const [submitting, setSubmitting] = useState(false)
 
-  // Lock background page scroll when modal is open
-  useEffect(() => {
-    if (showModal || showDeleteModal) {
-      const prevOverflow = document.body.style.overflow
-      document.body.style.overflow = 'hidden'
-      return () => {
-        document.body.style.overflow = prevOverflow
-      }
-    }
-  }, [showModal, showDeleteModal])
-
   // Service Number Search State inside Modal
   const [searchServiceNumber, setSearchServiceNumber] = useState('')
   const [searchingPerson, setSearchingPerson] = useState(false)
@@ -62,6 +51,17 @@ export const PersonalOccurrenceReporting = ({ initialTraineeId = null }) => {
     remarks: ''
   }
   const [form, setForm] = useState(defaultForm)
+
+  // Lock background page scroll when modal is open
+  useEffect(() => {
+    if (showModal || showDeleteModal) {
+      const prevOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = prevOverflow
+      }
+    }
+  }, [showModal, showDeleteModal])
 
   // Fetch Occurrences
   const fetchOccurrences = async () => {
