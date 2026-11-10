@@ -18,13 +18,12 @@ pipeline {
                 }
             }
         }
-     stage('Deploy to Server') {
+        stage('Deploy to Server') {
             steps {
                 sh '''
                     echo "Preparing deployment files..."
-                    TARGET_DIR="/var/jenkins_home/deploy_target_html"
                     
-                    # Ensure host target directory exists (accessible via the bound volume)
+                    # Ensure target directory exists on the host via the bound volume
                     sudo mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html
                     
                     echo "Copying build files to web root..."
