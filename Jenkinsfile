@@ -21,20 +21,15 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 sh '''
-                    APP_DIR="/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk"
+                    echo "Preparing deployment files..."
                     
-                    echo "Deploying to production web root..."
-                    mkdir -p frontend-dist
-                    cp -r frontend/dist/* frontend-dist/
+                    # Copy to a staging folder inside jenkins_home first (which Jenkins owns)
+                    STAGING_DIR="/var/jenkins_home/deploy_staging"
+                    mkdir -p $STAGING_DIR
+                    rm -rf $STAGING_DIR/*
+                    cp -r frontend/dist/* $STAGING_DIR/
                     
-                    # Automatically create public_html if it doesn't exist yet to prevent missing directory errors
-                    mkdir -p $APP_DIR/public_html
-                    
-                    # Live CloudPanel public directory deployment
-                    rm -rf $APP_DIR/public_html/*
-                    cp -r frontend/dist/* $APP_DIR/public_html/
-                    
-                    echo "Deployment completed successfully!"
+                    echo "Files staged successfully at $STAGING_DIR"
                 '''
             }
         }
