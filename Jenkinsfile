@@ -18,18 +18,19 @@ pipeline {
                 }
             }
         }
-       stage('Deploy to Server') {
+      stage('Deploy to Server') {
             steps {
                 sh '''
-                    echo "Deploying files via SSH/SCP to production..."
-                    
-                    # Create local distribution package folder
+                    echo "Preparing deployment package..."
                     mkdir -p frontend-dist
                     cp -r frontend/dist/* frontend-dist/
                     
-                    # Ensure public_html exists and sync files over SSH to your user account
-                    # (Replace 'itwekala-ttsmp' and your server IP/localhost if needed)
+                    echo "Deploying to production web root via SSH..."
+                    # Ensure the target directory exists on the host via SSH
                     ssh -o StrictHostKeyChecking=no itwekala-ttsmp@localhost "mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html"
+                    
+                    # Clean old files and copy new build assets over SSH/SCP
+                    ssh -o StrictHostKeyChecking=no itwekala-ttsmp@localhost "rm -rf /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/*"
                     scp -r frontend/dist/* itwekala-ttsmp@localhost:/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/
                     
                     echo "Deployment completed successfully!"
