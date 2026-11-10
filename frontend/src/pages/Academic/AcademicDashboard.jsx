@@ -74,10 +74,10 @@ export const AcademicDashboard = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* 8 Primary ERP Summary Tiles */}
+      {/* 9 Primary ERP Summary Tiles */}
       <div className="row g-3 mb-4">
         {/* Total Trades */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 border-primary shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('trades')}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Total Trades</span>
@@ -91,7 +91,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
         </div>
 
         {/* Total Courses */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 border-info shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('courses')}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Total Courses</span>
@@ -105,7 +105,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
         </div>
 
         {/* Active Batches */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 border-success shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('batches')}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Active Batches</span>
@@ -119,7 +119,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
         </div>
 
         {/* Active Instructors */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 border-warning shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('instructors')}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Active Instructors</span>
@@ -133,7 +133,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
         </div>
 
         {/* Active Students */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 border-secondary shadow-sm">
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Active Trainees</span>
@@ -147,7 +147,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
         </div>
 
         {/* Available Classrooms */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 border-teal shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('classrooms')} style={{ borderLeftColor: '#0d9488' }}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Available Classrooms</span>
@@ -160,36 +160,32 @@ export const AcademicDashboard = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Upcoming Phase Tests */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-danger shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('phase-tests')}>
+        {/* Scheduled Examinations & Tests (Unified) */}
+        <div className="col-6 col-md-4 col-xl-4">
+          <div className="card slaf-card h-100 p-3 border-start border-4 border-danger shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('examinations')} style={{ borderLeftColor: '#dc2626' }}>
             <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Upcoming Phase Tests</span>
+              <span className="text-muted small fw-bold text-uppercase">Examinations & Tests</span>
               <div className="bg-danger-subtle text-danger rounded-circle p-2">
-                <i className="bi bi-journal-check fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.upcoming_phase_tests}</h2>
-            <small className="text-danger fw-semibold"><i className="bi bi-clock-history me-1"></i>Scheduled</small>
-          </div>
-        </div>
-
-        {/* Upcoming Final Exams */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-dark shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('final-exams')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Final Examinations</span>
-              <div className="bg-dark-subtle text-dark rounded-circle p-2">
                 <i className="bi bi-award-fill fs-5"></i>
               </div>
             </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.upcoming_final_exams}</h2>
-            <small className="text-muted"><i className="bi bi-calendar-event me-1"></i>Passing Out Exams</small>
+            <h2 className="fw-extrabold display-font mb-0 text-dark">
+              {(Number(stats.upcoming_phase_tests) || 0) + (Number(stats.upcoming_final_exams) || 0)}
+            </h2>
+            <small className="text-muted d-flex align-items-center flex-wrap gap-1">
+              <span className="text-danger fw-semibold">
+                <i className="bi bi-clock-history me-1"></i>{stats.upcoming_phase_tests || 0} Phase
+              </span>
+              <span>•</span>
+              <span className="text-dark fw-semibold">
+                <i className="bi bi-award me-1"></i>{stats.upcoming_final_exams || 0} Final
+              </span>
+            </small>
           </div>
         </div>
 
         {/* Course Calendars */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('calendar')} style={{ borderLeftColor: '#6366f1' }}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Course Calendars</span>
@@ -203,7 +199,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
         </div>
 
         {/* Pending Instructor Assignments */}
-        <div className="col-6 col-md-4 col-xl-3">
+        <div className="col-6 col-md-4 col-xl-4">
           <div className="card slaf-card h-100 p-3 border-start border-4 border-warning shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('calendar')}>
             <div className="d-flex justify-content-between align-items-center mb-2">
               <span className="text-muted small fw-bold text-uppercase">Pending Instructors</span>

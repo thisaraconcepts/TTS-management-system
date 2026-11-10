@@ -5,7 +5,13 @@ import { ClassroomAttendanceRegister } from './ClassroomAttendanceRegister'
 import { ClassicalReportModal } from '../../components/ClassicalReportModal'
 
 export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
-  const [activeSubTab, setActiveSubTab] = useState(initialTab)
+  const normalizedInitialTab = ['phase-tests', 'final-exams', 'examinations'].includes(initialTab)
+    ? 'examinations'
+    : initialTab
+  const [activeSubTab, setActiveSubTab] = useState(normalizedInitialTab)
+  const [examTypeFilter, setExamTypeFilter] = useState(
+    initialTab === 'final-exams' ? 'Final Exam' : initialTab === 'phase-tests' ? 'Phase Test' : 'ALL'
+  )
   const [courses, setCourses] = useState([])
   const [selectedCourseId, setSelectedCourseId] = useState('')
   const [exams, setExams] = useState([])
@@ -187,7 +193,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
       setExamForm({
         course_id: initialCourseId,
         subject_id: '',
-        type: activeSubTab === 'final-exams' ? 'Final Exam' : 'Phase Test',
+        type: examTypeFilter === 'Final Exam' ? 'Final Exam' : 'Phase Test',
         date: new Date().toISOString().split('T')[0],
         max_marks: 100,
         pass_marks: 50
@@ -226,7 +232,14 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
   }, [selectedCourseId])
 
   useEffect(() => {
-    setActiveSubTab(initialTab)
+    if (['phase-tests', 'final-exams', 'examinations'].includes(initialTab)) {
+      setActiveSubTab('examinations')
+      if (initialTab === 'final-exams') setExamTypeFilter('Final Exam')
+      else if (initialTab === 'phase-tests') setExamTypeFilter('Phase Test')
+      else setExamTypeFilter('ALL')
+    } else if (initialTab) {
+      setActiveSubTab(initialTab)
+    }
   }, [initialTab])
 
   const handleCreateExam = async (e) => {
@@ -421,6 +434,11 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
   // Filtered list of exams for main tabs
   const filteredExams = exams.filter(ex => {
+    if (activeSubTab === 'examinations') {
+      if (examTypeFilter === 'Phase Test') return ex.type === 'Phase Test'
+      if (examTypeFilter === 'Final Exam') return ex.type === 'Final Exam'
+      return true
+    }
     if (activeSubTab === 'phase-tests') return ex.type === 'Phase Test'
     if (activeSubTab === 'final-exams') return ex.type === 'Final Exam'
     return true
@@ -642,7 +660,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
             </select>
           </div>
           <div className="col-12 col-sm-4 col-md-3 text-start text-sm-end">
-            {(activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
+            {(activeSubTab === 'examinations' || activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
               <button className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto" onClick={handleOpenExamModal}>
                 <i className="bi bi-journal-plus me-1"></i> Schedule Exam
               </button>
@@ -659,13 +677,8 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
           </button>
         </li>
         <li className="nav-item">
-          <button className={`nav-link btn-sm ${activeSubTab === 'phase-tests' ? 'active fw-bold' : ''}`} onClick={() => setActiveSubTab('phase-tests')}>
-            <i className="bi bi-file-earmark-code me-1.5"></i> Phase Tests
-          </button>
-        </li>
-        <li className="nav-item">
-          <button className={`nav-link btn-sm ${activeSubTab === 'final-exams' ? 'active fw-bold' : ''}`} onClick={() => setActiveSubTab('final-exams')}>
-            <i className="bi bi-award me-1.5"></i> Final Examinations
+          <button className={`nav-link btn-sm ${['examinations', 'phase-tests', 'final-exams'].includes(activeSubTab) ? 'active fw-bold' : ''}`} onClick={() => setActiveSubTab('examinations')}>
+            <i className="bi bi-award me-1.5"></i> Scheduled Examinations
           </button>
         </li>
         <li className="nav-item">
@@ -680,9 +693,42 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
         <ClassroomAttendanceRegister />
       )}
 
-      {/* Sub Tab 2 & 3: Phase Tests & Final Exams */}
-      {(activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
+      {/* Sub Tab 2: Scheduled Examinations (Phase Tests & Final Exams Combined) */}
+      {(activeSubTab === 'examinations' || activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
         <div className="card slaf-card p-0 shadow-sm border-0">
+          {/* Quick Filter Bar */}
+          <div className="p-3 border-bottom bg-light-subtle d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div className="d-flex align-items-center flex-wrap gap-2">
+              <span className="small fw-bold text-muted text-uppercase me-1">Filter by Type:</span>
+              <div className="btn-group btn-group-sm" role="group">
+                <button
+                  type="button"
+                  className={`btn ${examTypeFilter === 'ALL' ? 'btn-primary fw-bold' : 'btn-outline-secondary'}`}
+                  onClick={() => setExamTypeFilter('ALL')}
+                >
+                  All ({exams.length})
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${examTypeFilter === 'Phase Test' ? 'btn-danger fw-bold text-white' : 'btn-outline-secondary'}`}
+                  onClick={() => setExamTypeFilter('Phase Test')}
+                >
+                  Phase Tests ({exams.filter(e => e.type === 'Phase Test').length})
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${examTypeFilter === 'Final Exam' ? 'btn-dark fw-bold text-white' : 'btn-outline-secondary'}`}
+                  onClick={() => setExamTypeFilter('Final Exam')}
+                >
+                  Final Exams ({exams.filter(e => e.type === 'Final Exam').length})
+                </button>
+              </div>
+            </div>
+            <div className="small text-muted">
+              Showing <strong>{filteredExams.length}</strong> of <strong>{exams.length}</strong> scheduled examinations
+            </div>
+          </div>
+
           <div className="table-responsive">
             <table className="table slaf-table align-middle mb-0">
               <thead className="bg-light">
@@ -703,7 +749,16 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                 ) : (
                   filteredExams.map(ex => (
                     <tr key={ex.id}>
-                      <td><span className="badge bg-primary-subtle text-primary border fw-bold">{ex.type}</span></td>
+                      <td>
+                        <span className={`badge border fw-bold ${
+                          ex.type === 'Final Exam' 
+                            ? 'bg-dark-subtle text-dark border-dark' 
+                            : 'bg-danger-subtle text-danger border-danger'
+                        }`}>
+                          <i className={`bi ${ex.type === 'Final Exam' ? 'bi-award-fill' : 'bi-journal-check'} me-1`}></i>
+                          {ex.type}
+                        </span>
+                      </td>
                       <td><strong className="text-dark">{ex.subject_name}</strong></td>
                       <td><small className="text-muted"><i className="bi bi-calendar-event me-1 text-primary"></i>{ex.date}</small></td>
                       <td><span className="badge bg-secondary-subtle text-dark border">{ex.max_marks} Marks</span></td>
