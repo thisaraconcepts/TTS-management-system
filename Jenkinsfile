@@ -18,21 +18,19 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Server') {
+       stage('Deploy to Server') {
             steps {
                 sh '''
-                    APP_DIR="/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk"
+                    echo "Deploying files via SSH/SCP to production..."
                     
-                    echo "Deploying to production web root..."
+                    # Create local distribution package folder
                     mkdir -p frontend-dist
                     cp -r frontend/dist/* frontend-dist/
                     
-                    # Automatically create public_html if it doesn't exist yet to prevent missing directory errors
-                    mkdir -p $APP_DIR/public_html
-                    
-                    # Live CloudPanel public directory deployment
-                    rm -rf $APP_DIR/public_html/*
-                    cp -r frontend/dist/* $APP_DIR/public_html/
+                    # Ensure public_html exists and sync files over SSH to your user account
+                    # (Replace 'itwekala-ttsmp' and your server IP/localhost if needed)
+                    ssh -o StrictHostKeyChecking=no itwekala-ttsmp@localhost "mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html"
+                    scp -r frontend/dist/* itwekala-ttsmp@localhost:/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/
                     
                     echo "Deployment completed successfully!"
                 '''
