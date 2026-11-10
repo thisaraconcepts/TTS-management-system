@@ -777,18 +777,27 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
       {showExamModal && (
         <div
           className="modal fade show d-block"
-          style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060, overflowY: 'auto' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1060, overflowY: 'auto', padding: '0.75rem' }}
           tabIndex="-1"
           role="dialog"
           aria-modal="true"
         >
-          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable my-3 my-sm-4" style={{ maxWidth: '600px', width: '95%' }}>
+          <div
+            className="modal-dialog modal-dialog-centered"
+            style={{ maxWidth: '600px', width: '100%', maxHeight: 'calc(100vh - 1.5rem)', margin: 'auto' }}
+          >
             <form
               onSubmit={handleCreateExam}
-              className="modal-content slaf-card shadow-lg border-0"
-              style={{ maxHeight: 'calc(100vh - 3rem)', display: 'flex', flexDirection: 'column' }}
+              className="modal-content slaf-card shadow-xl border-0"
+              style={{
+                maxHeight: 'calc(100vh - 1.5rem)',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                borderRadius: '0.75rem'
+              }}
             >
-              <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between flex-shrink-0">
+              <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between flex-shrink-0 py-2.5 px-3 px-md-4">
                 <div>
                   <h5 className="modal-title display-font text-primary fw-bold mb-0">
                     <i className="bi bi-calendar-plus me-2"></i>Schedule Examination
@@ -800,7 +809,16 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                 <button type="button" className="btn-close" onClick={() => setShowExamModal(false)} aria-label="Close"></button>
               </div>
 
-              <div className="modal-body p-3 p-md-4" style={{ overflowY: 'auto', flex: '1 1 auto', overscrollBehavior: 'contain' }}>
+              <div
+                className="modal-body p-3 p-md-4"
+                style={{
+                  overflowY: 'auto',
+                  flex: '1 1 auto',
+                  minHeight: '0px',
+                  maxHeight: 'calc(100vh - 13.5rem)',
+                  overscrollBehavior: 'contain'
+                }}
+              >
                   {/* Ongoing Course Selector */}
                   <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-1">
@@ -988,10 +1006,10 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top bg-light-subtle d-flex flex-column-reverse flex-sm-row justify-content-end gap-2 flex-shrink-0">
+                <div className="modal-footer border-top bg-light-subtle d-flex flex-column-reverse flex-sm-row justify-content-end align-items-stretch align-items-sm-center gap-2 flex-shrink-0 py-2.5 px-3 px-md-4">
                   <button
                     type="button"
-                    className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
+                    className="btn btn-outline-secondary btn-sm order-2 order-sm-1 px-3"
                     onClick={() => setShowExamModal(false)}
                     disabled={submittingExam}
                   >
@@ -999,18 +1017,23 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto"
+                    className="btn btn-primary btn-sm fw-bold shadow-sm order-1 order-sm-2 px-3 py-1.5 d-inline-flex align-items-center justify-content-center gap-1.5"
                     disabled={submittingExam || loadingCourses || loadingModalSubjects || !examForm.course_id || !examForm.subject_id || modalSubjects.length === 0}
+                    style={{
+                      background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                      border: 'none',
+                      minHeight: '36px'
+                    }}
                   >
                     {submittingExam ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                        Scheduling Exam...
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Scheduling Exam...</span>
                       </>
                     ) : (
                       <>
-                        <i className="bi bi-calendar-check me-1"></i>
-                        Schedule Exam
+                        <i className="bi bi-calendar-check-fill"></i>
+                        <span>Schedule Examination</span>
                       </>
                     )}
                   </button>
@@ -1506,16 +1529,25 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
       {showOverrideModal && overrideStudent && (
         <div
           className="modal fade show d-block"
-          style={{ backgroundColor: 'rgba(0,0,0,0.65)', zIndex: 1070, overflowY: 'auto' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.65)', zIndex: 1070, overflowY: 'auto', padding: '0.75rem' }}
           tabIndex="-1"
           role="dialog"
           aria-modal="true"
         >
-          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable my-3 my-sm-4" style={{ maxWidth: '600px', width: '95%' }}>
+          <div
+            className="modal-dialog modal-dialog-centered"
+            style={{ maxWidth: '600px', width: '100%', maxHeight: 'calc(100vh - 1.5rem)', margin: 'auto' }}
+          >
             <form
               onSubmit={handleSubmitOverride}
-              className="modal-content slaf-card shadow-lg border-0"
-              style={{ maxHeight: 'calc(100vh - 3rem)', display: 'flex', flexDirection: 'column' }}
+              className="modal-content slaf-card shadow-xl border-0"
+              style={{
+                maxHeight: 'calc(100vh - 1.5rem)',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                borderRadius: '0.75rem'
+              }}
             >
               <div className="modal-header border-bottom bg-warning-subtle py-2.5 px-3 flex-shrink-0">
                 <h6 className="modal-title display-font text-dark fw-bold mb-0 text-truncate">
@@ -1524,7 +1556,16 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                 <button type="button" className="btn-close" onClick={() => setShowOverrideModal(false)}></button>
               </div>
 
-              <div className="modal-body p-3" style={{ overflowY: 'auto', flex: '1 1 auto', overscrollBehavior: 'contain' }}>
+              <div
+                className="modal-body p-3"
+                style={{
+                  overflowY: 'auto',
+                  flex: '1 1 auto',
+                  minHeight: '0px',
+                  maxHeight: 'calc(100vh - 13.5rem)',
+                  overscrollBehavior: 'contain'
+                }}
+              >
                   <div className="alert alert-warning py-2 px-3 mb-3 border" style={{ fontSize: '0.8rem' }}>
                     <i className="bi bi-exclamation-triangle-fill me-1.5"></i>
                     <strong>Official Audit Notice:</strong> This action allows an ineligible trainee (status: <strong>{overrideStudent.parade_state_status}</strong>) to sit the examination. All overrides are permanently recorded in the system audit trail.
@@ -1568,23 +1609,24 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                     />
                   </div>
                 </div>
-                <div className="modal-footer border-top bg-light py-2 d-flex flex-column-reverse flex-sm-row justify-content-end gap-2 flex-shrink-0">
-                  <button type="button" className="btn btn-outline-secondary btn-sm w-100 w-sm-auto" onClick={() => setShowOverrideModal(false)}>
+                <div className="modal-footer border-top bg-light py-2.5 px-3 px-md-4 d-flex flex-column-reverse flex-sm-row justify-content-end align-items-stretch align-items-sm-center gap-2 flex-shrink-0">
+                  <button type="button" className="btn btn-outline-secondary btn-sm order-2 order-sm-1 px-3" onClick={() => setShowOverrideModal(false)}>
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-warning btn-sm fw-bold shadow-sm px-3 text-dark w-100 w-sm-auto"
+                    className="btn btn-warning btn-sm fw-bold shadow-sm order-1 order-sm-2 px-3 py-1.5 text-dark d-inline-flex align-items-center justify-content-center gap-1.5"
                     disabled={submittingOverride}
                   >
                     {submittingOverride ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                        Authorizing...
+                        <span>Authorizing...</span>
                       </>
                     ) : (
                       <>
-                        <i className="bi bi-check-circle-fill me-1"></i> Authorize & Grant Eligibility
+                        <i className="bi bi-shield-check"></i>
+                        <span>Authorize & Grant Eligibility</span>
                       </>
                     )}
                   </button>
