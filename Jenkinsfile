@@ -7,12 +7,22 @@ pipeline {
                     sh '''
                         export VERSION=v20.11.0
                         export DISTRO=linux-x64
-                        curl -fsSL https://nodejs.org/dist/$VERSION/node-$VERSION-$DISTRO.tar.gz -o node.tar.gz
-                        tar -xzf node.tar.gz
+                        
+                        # Cache Node.js binary if already unpacked
+                        if [ ! -d "node-$VERSION-$DISTRO/bin" ]; then
+                            echo "Downloading Node.js $VERSION..."
+                            curl -fsSL https://nodejs.org/dist/$VERSION/node-$VERSION-$DISTRO.tar.gz -o node.tar.gz
+                            tar -xzf node.tar.gz
+                            rm -f node.tar.gz
+                        fi
+                        
                         export PATH=$PWD/node-$VERSION-$DISTRO/bin:$PATH
                         
+                        echo "Installing dependencies..."
                         npm install
                         chmod +x node_modules/.bin/*
+                        
+                        echo "Building production frontend bundle..."
                         npm run build
                     '''
                 }
@@ -21,15 +31,19 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 sh '''
-                    echo "Preparing deployment files..."
+                    echo "Deploying frontend build to production web root..."
+                    HOST_IP="172.17.0.1"
+                    DEPLOY_USER="itwekala-ttsmp"
+                    WEB_ROOT="/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html"
                     
-                    # Copy to a staging folder inside jenkins_home first (which Jenkins owns)
-                    STAGING_DIR="/var/jenkins_home/deploy_staging"
-                    mkdir -p $STAGING_DIR
-                    rm -rf $STAGING_DIR/*
-                    cp -r frontend/dist/* $STAGING_DIR/
+                    # Ensure public_html exists
+                    ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${HOST_IP} "mkdir -p ${WEB_ROOT}"
                     
-                    echo "Files staged successfully at $STAGING_DIR"
+                    # Deploy new build files directly to the web root
+                    echo "Syncing build files to ${WEB_ROOT}..."
+                    scp -o StrictHostKeyChecking=no -r frontend/dist/* ${DEPLOY_USER}@${HOST_IP}:${WEB_ROOT}/
+                    
+                    echo "Frontend successfully deployed to production web root!"
                 '''
             }
         }
