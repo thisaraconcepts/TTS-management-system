@@ -777,32 +777,46 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
       {showExamModal && (
         <div
           className="modal fade show d-block"
-          style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1060, overflowY: 'auto', padding: '0.75rem' }}
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            zIndex: 1060,
+            overflowY: 'auto',
+            padding: '12px'
+          }}
           tabIndex="-1"
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="modal-dialog modal-dialog-centered"
-            style={{ maxWidth: '600px', width: '100%', maxHeight: 'calc(100vh - 1.5rem)', margin: 'auto' }}
+            className="modal-dialog"
+            style={{
+              maxWidth: '560px',
+              width: '100%',
+              height: 'calc(100vh - 24px)',
+              maxHeight: '580px',
+              margin: 'auto',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
           >
             <form
               onSubmit={handleCreateExam}
-              className="modal-content slaf-card shadow-xl border-0"
+              className="modal-content slaf-card shadow-2xl border-0"
               style={{
-                maxHeight: 'calc(100vh - 1.5rem)',
+                height: '100%',
+                maxHeight: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden',
-                borderRadius: '0.75rem'
+                borderRadius: '12px'
               }}
             >
               <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between flex-shrink-0 py-2.5 px-3 px-md-4">
                 <div>
-                  <h5 className="modal-title display-font text-primary fw-bold mb-0">
+                  <h5 className="modal-title display-font text-primary fw-bold mb-0 fs-6">
                     <i className="bi bi-calendar-plus me-2"></i>Schedule Examination
                   </h5>
-                  <small className="text-muted" style={{ fontSize: '0.78rem' }}>
+                  <small className="text-muted" style={{ fontSize: '0.75rem' }}>
                     Select an ongoing training course and its assigned syllabus subject/module
                   </small>
                 </div>
@@ -810,12 +824,11 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
               </div>
 
               <div
-                className="modal-body p-3 p-md-4"
+                className="modal-body p-3 px-md-4 py-md-3"
                 style={{
-                  overflowY: 'auto',
                   flex: '1 1 auto',
-                  minHeight: '0px',
-                  maxHeight: 'calc(100vh - 13.5rem)',
+                  minHeight: 0,
+                  overflowY: 'auto',
                   overscrollBehavior: 'contain'
                 }}
               >
@@ -1006,10 +1019,13 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top bg-light-subtle d-flex flex-column-reverse flex-sm-row justify-content-end align-items-stretch align-items-sm-center gap-2 flex-shrink-0 py-2.5 px-3 px-md-4">
+                <div
+                  className="modal-footer border-top bg-light-subtle d-flex flex-row justify-content-end align-items-center gap-2 flex-shrink-0 py-2.5 px-3 px-md-4"
+                  style={{ minHeight: '52px' }}
+                >
                   <button
                     type="button"
-                    className="btn btn-outline-secondary btn-sm order-2 order-sm-1 px-3"
+                    className="btn btn-outline-secondary btn-sm px-3 fw-semibold"
                     onClick={() => setShowExamModal(false)}
                     disabled={submittingExam}
                   >
@@ -1017,12 +1033,12 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-primary btn-sm fw-bold shadow-sm order-1 order-sm-2 px-3 py-1.5 d-inline-flex align-items-center justify-content-center gap-1.5"
+                    className="btn btn-primary btn-sm fw-bold shadow-sm px-3 py-1.5 d-inline-flex align-items-center justify-content-center gap-1.5"
                     disabled={submittingExam || loadingCourses || loadingModalSubjects || !examForm.course_id || !examForm.subject_id || modalSubjects.length === 0}
                     style={{
                       background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
                       border: 'none',
-                      minHeight: '36px'
+                      minHeight: '34px'
                     }}
                   >
                     {submittingExam ? (
@@ -1529,24 +1545,38 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
       {showOverrideModal && overrideStudent && (
         <div
           className="modal fade show d-block"
-          style={{ backgroundColor: 'rgba(0,0,0,0.65)', zIndex: 1070, overflowY: 'auto', padding: '0.75rem' }}
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            zIndex: 1070,
+            overflowY: 'auto',
+            padding: '12px'
+          }}
           tabIndex="-1"
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="modal-dialog modal-dialog-centered"
-            style={{ maxWidth: '600px', width: '100%', maxHeight: 'calc(100vh - 1.5rem)', margin: 'auto' }}
+            className="modal-dialog"
+            style={{
+              maxWidth: '560px',
+              width: '100%',
+              height: 'calc(100vh - 24px)',
+              maxHeight: '580px',
+              margin: 'auto',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
           >
             <form
               onSubmit={handleSubmitOverride}
-              className="modal-content slaf-card shadow-xl border-0"
+              className="modal-content slaf-card shadow-2xl border-0"
               style={{
-                maxHeight: 'calc(100vh - 1.5rem)',
+                height: '100%',
+                maxHeight: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden',
-                borderRadius: '0.75rem'
+                borderRadius: '12px'
               }}
             >
               <div className="modal-header border-bottom bg-warning-subtle py-2.5 px-3 flex-shrink-0">
@@ -1557,12 +1587,11 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
               </div>
 
               <div
-                className="modal-body p-3"
+                className="modal-body p-3 px-md-4 py-md-3"
                 style={{
-                  overflowY: 'auto',
                   flex: '1 1 auto',
-                  minHeight: '0px',
-                  maxHeight: 'calc(100vh - 13.5rem)',
+                  minHeight: 0,
+                  overflowY: 'auto',
                   overscrollBehavior: 'contain'
                 }}
               >
@@ -1609,13 +1638,16 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                     />
                   </div>
                 </div>
-                <div className="modal-footer border-top bg-light py-2.5 px-3 px-md-4 d-flex flex-column-reverse flex-sm-row justify-content-end align-items-stretch align-items-sm-center gap-2 flex-shrink-0">
-                  <button type="button" className="btn btn-outline-secondary btn-sm order-2 order-sm-1 px-3" onClick={() => setShowOverrideModal(false)}>
+                <div
+                  className="modal-footer border-top bg-light d-flex flex-row justify-content-end align-items-center gap-2 flex-shrink-0 py-2 px-3 px-md-4"
+                  style={{ minHeight: '52px' }}
+                >
+                  <button type="button" className="btn btn-outline-secondary btn-sm px-3 fw-semibold" onClick={() => setShowOverrideModal(false)}>
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-warning btn-sm fw-bold shadow-sm order-1 order-sm-2 px-3 py-1.5 text-dark d-inline-flex align-items-center justify-content-center gap-1.5"
+                    className="btn btn-warning btn-sm fw-bold shadow-sm px-3 py-1.5 text-dark d-inline-flex align-items-center justify-content-center gap-1.5"
                     disabled={submittingOverride}
                   >
                     {submittingOverride ? (
