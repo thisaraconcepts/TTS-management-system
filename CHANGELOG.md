@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 | **Database** | MySQL 8.0 (Production VPS) / SQLite (Local Standalone Development) |
 | **Version Control** | Git, GitHub (`sankaadikaramNW/TTS-management-system`) |
 | **CI / CD** | Jenkins (Dockerized Pipeline with automated Node.js caching & SSH/SCP deployment) |
-| **Hosting & VPS** | Oracle Cloud VPS (`130.210.18.73`), Ubuntu 24.04 LTS |
+| **Hosting & VPS** | Oracle Cloud VPS (``), Ubuntu 24.04 LTS |
 | **Web Server & Reverse Proxy** | CloudPanel, NGINX (TLS/SSL, HTTP/2), systemd (`ttsmp-fastapi.service`) |
 | **Media & Document Storage** | Cloudinary (Lesson Plan PDFs & Document attachments) / Local Static Mount |
 
@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
   - Single consolidated **"Examinations & Tests"** subtab and sidebar navigation item replacing separate redundant views.
   - In-table filter pill group (`All`, `Phase Tests`, `Final Exams`) with real-time count badges.
 - **Automated Jenkins CI/CD Pipeline Deployment**:
-  - Passwordless SSH/SCP integration from Jenkins Docker container (`172.17.0.1`) directly into production web root (`/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html`).
+  - Passwordless SSH/SCP integration from Jenkins Docker container (` directly into production web root (`/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html`).
   - Node.js archive binary caching within Jenkins workspace to eliminate redundant binary downloads on each run.
   - Automatic deployment with correct user and group permissions (`itwekala-ttsmp:itwekala-ttsmp`) and live NGINX reload.
 
