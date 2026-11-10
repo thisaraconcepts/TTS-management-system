@@ -27,6 +27,9 @@ pipeline {
                     mkdir -p frontend-dist
                     cp -r frontend/dist/* frontend-dist/
                     
+                    # Automatically create public_html if it doesn't exist yet to prevent missing directory errors
+                    mkdir -p $APP_DIR/public_html
+                    
                     # Live CloudPanel public directory deployment
                     rm -rf $APP_DIR/public_html/*
                     cp -r frontend/dist/* $APP_DIR/public_html/
