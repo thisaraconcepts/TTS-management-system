@@ -18,20 +18,21 @@ pipeline {
                 }
             }
         }
-      stage('Deploy to Server') {
+     stage('Deploy to Server') {
             steps {
                 sh '''
-                    echo "Preparing deployment package..."
-                    mkdir -p frontend-dist
-                    cp -r frontend/dist/* frontend-dist/
+                    echo "Preparing deployment files..."
+                    TARGET_DIR="/var/jenkins_home/deploy_target_html"
                     
-                    echo "Deploying to production web root via SSH..."
-                    # Ensure the target directory exists on the host via SSH
-                    ssh -o StrictHostKeyChecking=no itwekala-ttsmp@localhost "mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html"
+                    # Ensure host target directory exists (accessible via the bound volume)
+                    sudo mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html
                     
-                    # Clean old files and copy new build assets over SSH/SCP
-                    ssh -o StrictHostKeyChecking=no itwekala-ttsmp@localhost "rm -rf /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/*"
-                    scp -r frontend/dist/* itwekala-ttsmp@localhost:/home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/
+                    echo "Copying build files to web root..."
+                    sudo rm -rf /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/*
+                    sudo cp -r frontend/dist/* /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/
+                    
+                    # Fix ownership so CloudPanel/Nginx can serve the files properly
+                    sudo chown -R itwekala-ttsmp:itwekala-ttsmp /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html
                     
                     echo "Deployment completed successfully!"
                 '''
