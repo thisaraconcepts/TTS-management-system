@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/
 | **Frontend** | React 18, Vite 5, Bootstrap 5.3, Bootstrap Icons, Axios, React Hook Form, Zod, Chart.js, FullCalendar |
 | **Backend** | Python 3.12+, FastAPI, SQLAlchemy ORM, Pydantic v2, PyJWT, Passlib (bcrypt) |
 | **Database** | MySQL 8.0 (Production VPS) / SQLite (Local Standalone Development) |
-| **Version Control** | Git, GitHub (`sankaadikaramNW/TTS-management-system`) |
+|
 | **CI / CD** | Jenkins (Dockerized Pipeline with automated Node.js caching & SSH/SCP deployment) |
 | **Hosting & VPS** | Oracle Cloud VPS (``), Ubuntu 24.04 LTS |
 | **Web Server & Reverse Proxy** | CloudPanel, NGINX (TLS/SSL, HTTP/2), systemd (`ttsmp-fastapi.service`) |
