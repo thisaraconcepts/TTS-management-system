@@ -16,100 +16,44 @@ export const AccessDenied = ({ moduleTitle, permissionCode, attemptedPath }) => 
   const isAdmin = isUserAdmin(user)
 
   return (
-    <div className="container py-5 text-center fade-in-slide">
-      <div 
-        className="card slaf-card p-4 p-md-5 mx-auto border-0 shadow-lg" 
-        style={{ 
-          maxWidth: '680px',
-          background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
-          borderRadius: '16px'
-        }}
-      >
-        {/* Security Shield Icon */}
-        <div className="mb-4">
-          <div 
-            className="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 text-danger rounded-circle p-3 shadow-xs"
-            style={{ width: '90px', height: '90px' }}
-          >
-            <i className="bi bi-shield-lock-fill" style={{ fontSize: '3.25rem' }}></i>
+    <div className="py-4 py-md-5 fade-in-slide">
+      <div className="section-card mx-auto" style={{ maxWidth: 620 }}>
+        <div className="section-card-body p-4 p-md-5">
+          <div className="d-flex align-items-center gap-3 mb-4">
+            <span className="module-tile-icon" style={{ background: 'var(--tint-danger)', color: 'var(--color-danger)' }}>
+              <i className="bi bi-shield-lock"></i>
+            </span>
+            <div>
+              <span className="page-eyebrow" style={{ color: 'var(--color-danger)' }}>Access restricted</span>
+              <h2 className="page-title mb-0">You don't have access to this module</h2>
+            </div>
           </div>
-        </div>
 
-        {/* Header Titles */}
-        <div className="mb-3">
-          <span className="badge bg-danger text-white px-3 py-1.5 fw-bold text-uppercase mb-2 shadow-xs" style={{ letterSpacing: '0.08em', fontSize: '0.75rem' }}>
-            <i className="bi bi-exclamation-octagon-fill me-1.5"></i> Access Restricted / Unauthorized
-          </span>
-          <h2 className="display-font text-body fw-bold mb-1">ACCESS DENIED</h2>
-          <p className="text-muted small mb-0">
-            Sri Lanka Air Force • Trade Training School Security Gateway
+          <p className="text-muted mb-4">
+            Your account doesn't have the permission needed to open <strong className="text-body">{displayTitle}</strong>.
+            If you need it for your duties, ask the System Administrator or the Officer Commanding Training (OCT).
           </p>
-        </div>
 
-        {/* Detailed Explanation Alert */}
-        <div className="alert alert-danger bg-danger bg-opacity-10 border-danger border-opacity-25 text-start p-3.5 mb-4 rounded-3">
-          <div className="d-flex align-items-start gap-2.5">
-            <i className="bi bi-shield-x fs-4 text-danger mt-0.5"></i>
-            <div className="small text-body">
-              <div className="fw-bold text-danger mb-1" style={{ fontSize: '0.9rem' }}>
-                You do not have the required security permissions to access this module.
-              </div>
-              <div>
-                Your current account credentials lack the authorization clearance necessary to view or execute operations in <strong>{displayTitle}</strong>.
-              </div>
-            </div>
+          <dl className="kv-list mb-4">
+            <div><dt>Module</dt><dd>{displayTitle}</dd></div>
+            <div><dt>Permission required</dt><dd><code className="text-danger">{displayCode}</code></dd></div>
+            <div><dt>Signed in as</dt><dd>{user?.full_name || 'Anonymous'} <span className="text-muted fw-normal">({user?.username})</span></dd></div>
+            <div><dt>Role</dt><dd>{user?.role?.name || 'Standard user'}{isAdmin ? ' · Admin' : ''}</dd></div>
+            <div><dt>Requested page</dt><dd className="text-truncate" style={{ maxWidth: '60%' }}>{displayPath}</dd></div>
+          </dl>
+
+          <div className="d-flex flex-column flex-sm-row gap-2">
+            <button
+              type="button"
+              className="btn btn-primary d-inline-flex align-items-center justify-content-center gap-2"
+              onClick={() => goToHomePortal(navigate)}
+            >
+              <i className="bi bi-house-door"></i> Back to home
+            </button>
+            <Link to="/profile" className="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center gap-2">
+              <i className="bi bi-person-badge"></i> View my permissions
+            </Link>
           </div>
-        </div>
-
-        {/* Authorization Metadata Details */}
-        <div className="card slaf-card border text-start p-3 mb-4 rounded-3">
-          <div className="row g-2 small">
-            <div className="col-12 col-sm-6">
-              <span className="text-muted d-block">Requested Module:</span>
-              <strong className="text-body">{displayTitle}</strong>
-            </div>
-            <div className="col-12 col-sm-6">
-              <span className="text-muted d-block">Required Permission Code:</span>
-              <code className="text-danger fw-bold">{displayCode}</code>
-            </div>
-            <div className="col-12 col-sm-6 mt-2">
-              <span className="text-muted d-block">Authenticated User:</span>
-              <span className="text-body fw-semibold">{user?.full_name || 'Anonymous'}</span>
-              <small className="text-muted d-block">{user?.rank || 'Trainee/Staff'} ({user?.username})</small>
-            </div>
-            <div className="col-12 col-sm-6 mt-2">
-              <span className="text-muted d-block">Assigned Role:</span>
-              <span className={`badge ${isAdmin ? 'bg-primary' : 'bg-secondary'}`}>
-                {user?.role?.name || 'Standard User'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-2.5">
-          <button 
-            type="button"
-            className="btn btn-primary btn-lg px-4 py-2.5 fw-bold shadow-sm d-inline-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto"
-            onClick={() => goToHomePortal(navigate)}
-            title="Return to the Executive Dashboard"
-          >
-            <i className="bi bi-house-door-fill"></i>
-            <span>Back to Home Portal</span>
-          </button>
-
-          <Link 
-            to="/profile" 
-            className="btn btn-outline-secondary btn-lg px-3.5 py-2.5 fw-semibold d-inline-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto"
-            title="View my authorized permissions"
-          >
-            <i className="bi bi-person-badge"></i>
-            <span>View My Permissions</span>
-          </Link>
-        </div>
-
-        <div className="mt-4 pt-2 text-muted" style={{ fontSize: '0.72rem' }}>
-          Please contact the <strong>System Administrator</strong> or <strong>Officer Commanding Training (OCT)</strong> if you require access to this military workspace.
         </div>
       </div>
     </div>

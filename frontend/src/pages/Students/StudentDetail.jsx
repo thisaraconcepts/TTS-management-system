@@ -72,10 +72,11 @@ export const StudentDetail = () => {
 
   return (
     <div className="fade-in-slide">
-      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+      <div className="page-header">
         <div>
-          <h2 className="mb-0 text-primary display-font fs-3">Trainee Personal Academic Profile</h2>
-          <p className="text-muted mb-0 small">Master record for service number {student.service_number}</p>
+          <span className="page-eyebrow">Trainee record</span>
+          <h2 className="page-title">{student.full_name || `${student.rank} ${student.initials}`}</h2>
+          <p className="page-subtitle">Service number {student.service_number}</p>
         </div>
         <div className="d-flex gap-2 flex-wrap w-100 w-sm-auto justify-content-start justify-content-sm-end">
           {hasPermission('student:write') && (

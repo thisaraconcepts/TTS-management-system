@@ -8,13 +8,13 @@ import { NightParadeTab } from './NightParadeTab'
 
 // ─── Status badge config (Text + Accessible Icons + Colors) ────────
 const SUBMISSION_STATUS_CONFIG = {
-  NOT_SUBMITTED: { label: 'NOT SUBMITTED', color: '#dc2626', bg: '#fef2f2', border: '#fca5a5', icon: 'bi-exclamation-octagon-fill' },
-  DRAFT: { label: 'DRAFT (NOT SUBMITTED)', color: '#64748b', bg: '#f1f5f9', border: '#cbd5e1', icon: 'bi-pencil-square' },
-  SUBMITTED: { label: 'SUBMITTED', color: '#d97706', bg: '#fffbeb', border: '#fde68a', icon: 'bi-send-fill' },
-  PENDING_APPROVAL: { label: 'PENDING APPROVAL', color: '#d97706', bg: '#fffbeb', border: '#fde68a', icon: 'bi-hourglass-split' },
-  APPROVED: { label: 'APPROVED', color: '#059669', bg: '#ecfdf5', border: '#a7f3d0', icon: 'bi-patch-check-fill' },
-  RETURNED: { label: 'RETURNED FOR CORRECTION', color: '#e11d48', bg: '#fff1f2', border: '#fecdd3', icon: 'bi-arrow-counterclockwise' },
-  REJECTED: { label: 'REJECTED / RETURNED', color: '#dc2626', bg: '#fef2f2', border: '#fca5a5', icon: 'bi-x-circle-fill' },
+  NOT_SUBMITTED: { label: 'NOT SUBMITTED', color: '#b42318', bg: 'var(--tint-danger)', border: 'var(--tint-danger-border)', icon: 'bi-exclamation-octagon-fill' },
+  DRAFT: { label: 'DRAFT (NOT SUBMITTED)', color: '#5b6574', bg: 'var(--bg-subtle)', border: 'var(--border-strong)', icon: 'bi-pencil-square' },
+  SUBMITTED: { label: 'SUBMITTED', color: '#b26a00', bg: 'var(--tint-warning)', border: 'var(--tint-warning-border)', icon: 'bi-send-fill' },
+  PENDING_APPROVAL: { label: 'PENDING APPROVAL', color: '#b26a00', bg: 'var(--tint-warning)', border: 'var(--tint-warning-border)', icon: 'bi-hourglass-split' },
+  APPROVED: { label: 'APPROVED', color: '#1f7a4d', bg: 'var(--tint-success)', border: 'var(--tint-success-border)', icon: 'bi-patch-check-fill' },
+  RETURNED: { label: 'RETURNED FOR CORRECTION', color: '#b42318', bg: 'var(--tint-danger)', border: 'var(--tint-danger-border)', icon: 'bi-arrow-counterclockwise' },
+  REJECTED: { label: 'REJECTED / RETURNED', color: '#b42318', bg: 'var(--tint-danger)', border: 'var(--tint-danger-border)', icon: 'bi-x-circle-fill' },
 }
 
 const StatusBadge = ({ status, isOverdue = false }) => {
@@ -536,16 +536,16 @@ export const DailyParade = () => {
 
   const getStatusColor = (status) => {
     const map = {
-      Present: '#059669',
-      AWOL: '#dc2626',
-      Hospital: '#7c3aed',
-      Leave: '#2563eb',
-      'Sick Report': '#d97706',
-      'Temporary Duty': '#0891b2',
-      'Course Visit': '#0891b2',
-      'Detached Duty': '#6d28d9'
+      Present: '#1f7a4d',
+      AWOL: '#b42318',
+      Hospital: '#6e5a8a',
+      Leave: '#2c5ea8',
+      'Sick Report': '#b26a00',
+      'Temporary Duty': '#2f6f86',
+      'Course Visit': '#2f6f86',
+      'Detached Duty': '#6e5a8a'
     }
-    return map[status] || '#64748b'
+    return map[status] || '#5b6574'
   }
 
   // Quick date change helper (-1 day, Today, +1 day)
@@ -558,16 +558,12 @@ export const DailyParade = () => {
   return (
     <div className="fade-in-slide">
       {/* ─── Page Header with Date Navigator ─── */}
-      <div className="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+      <div className="page-header">
         <div>
-          <div className="d-flex align-items-center gap-2">
-            <h2 className="mb-0 text-primary display-font">Parade State Management</h2>
-            <span className="badge bg-primary-subtle text-primary border border-primary-subtle fw-semibold px-2 py-1">
-              SLAF TTS Ekala
-            </span>
-          </div>
-          <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>
-            Daily submission monitoring, pending approval tracking, and official daily strength accounting
+          <span className="page-eyebrow">Parade State</span>
+          <h2 className="page-title">Daily parade & strength</h2>
+          <p className="page-subtitle">
+            Track submissions, approve parade states and keep the official daily strength.
           </p>
         </div>
 
@@ -618,7 +614,7 @@ export const DailyParade = () => {
       </div>
 
       {/* ─── Top-Level Navigation Tabs ─── */}
-      <ul className="nav nav-tabs nav-tabs-responsive mb-4" style={{ borderBottom: '2px solid #e2e8f0' }}>
+      <ul className="nav nav-tabs nav-tabs-responsive mb-4">
         {[
           {
             key: 'monitoring',
@@ -661,15 +657,7 @@ export const DailyParade = () => {
           .map((tab) => (
             <li key={tab.key} className="nav-item">
               <button
-                className={`nav-link fw-semibold d-flex align-items-center gap-2 ${activeTab === tab.key ? 'active text-primary' : 'text-muted'
-                  }`}
-                style={{
-                  border: 'none',
-                  borderBottom: activeTab === tab.key ? '3px solid var(--bs-primary)' : '3px solid transparent',
-                  background: 'none',
-                  padding: '10px 18px',
-                  fontSize: '0.9rem'
-                }}
+                className={`nav-link d-flex align-items-center gap-2 ${activeTab === tab.key ? 'active' : ''}`}
                 onClick={() => handleTabChange(tab.key)}
               >
                 <i className={`bi ${tab.icon}`} />
@@ -696,8 +684,8 @@ export const DailyParade = () => {
                 <div
                   className="card slaf-card p-3 text-center h-100 cursor-pointer shadow-xs"
                   style={{
-                    borderTop: '4px solid #3b82f6',
-                    background: monitoringSubFilter === 'ALL' ? '#eff6ff' : '#fff'
+                    borderTop: '4px solid #2c5ea8',
+                    background: monitoringSubFilter === 'ALL' ? 'var(--tint-primary)' : 'var(--bg-card)'
                   }}
                   onClick={() => setMonitoringSubFilter('ALL')}
                 >
@@ -711,8 +699,8 @@ export const DailyParade = () => {
                 <div
                   className="card slaf-card p-3 text-center h-100 cursor-pointer shadow-xs"
                   style={{
-                    borderTop: '4px solid #dc2626',
-                    background: monitoringSubFilter === 'OUTSTANDING' ? '#fef2f2' : '#fff'
+                    borderTop: '4px solid #b42318',
+                    background: monitoringSubFilter === 'OUTSTANDING' ? 'var(--tint-danger)' : 'var(--bg-card)'
                   }}
                   onClick={() => setMonitoringSubFilter('OUTSTANDING')}
                 >
@@ -726,8 +714,8 @@ export const DailyParade = () => {
                 <div
                   className="card slaf-card p-3 text-center h-100 cursor-pointer shadow-xs"
                   style={{
-                    borderTop: '4px solid #d97706',
-                    background: monitoringSubFilter === 'PENDING' ? '#fffbeb' : '#fff'
+                    borderTop: '4px solid #b26a00',
+                    background: monitoringSubFilter === 'PENDING' ? 'var(--tint-warning)' : 'var(--bg-card)'
                   }}
                   onClick={() => setMonitoringSubFilter('PENDING')}
                 >
@@ -741,8 +729,8 @@ export const DailyParade = () => {
                 <div
                   className="card slaf-card p-3 text-center h-100 cursor-pointer shadow-xs"
                   style={{
-                    borderTop: '4px solid #059669',
-                    background: monitoringSubFilter === 'APPROVED' ? '#ecfdf5' : '#fff'
+                    borderTop: '4px solid #1f7a4d',
+                    background: monitoringSubFilter === 'APPROVED' ? 'var(--tint-success)' : 'var(--bg-card)'
                   }}
                   onClick={() => setMonitoringSubFilter('APPROVED')}
                 >
@@ -756,8 +744,8 @@ export const DailyParade = () => {
                 <div
                   className="card slaf-card p-3 text-center h-100 cursor-pointer shadow-xs"
                   style={{
-                    borderTop: '4px solid #e11d48',
-                    background: monitoringSubFilter === 'RETURNED' ? '#fff1f2' : '#fff'
+                    borderTop: '4px solid #b42318',
+                    background: monitoringSubFilter === 'RETURNED' ? 'var(--tint-danger)' : 'var(--bg-card)'
                   }}
                   onClick={() => setMonitoringSubFilter('RETURNED')}
                 >
@@ -770,10 +758,10 @@ export const DailyParade = () => {
               <div className="col-6 col-md-4 col-xl-2">
                 <div
                   className="card slaf-card p-3 text-center h-100 shadow-xs"
-                  style={{ borderTop: '4px solid #9333ea', background: '#faf5ff' }}
+                  style={{ borderTop: '4px solid #6e5a8a', background: 'var(--tint-plum)' }}
                 >
                   <div className="text-muted small fw-semibold text-uppercase">Overdue / Delays</div>
-                  <div className="fw-bold text-purple display-6 my-1" style={{ color: '#9333ea' }}>
+                  <div className="fw-bold display-6 my-1" style={{ color: '#6e5a8a' }}>
                     {monitoringData.summary.overdue}
                   </div>
                   <div className="small text-muted">Deadline: 08:00 hrs</div>
@@ -889,11 +877,11 @@ export const DailyParade = () => {
                           key={item.trade}
                           style={{
                             background: isReturned
-                              ? '#fff1f215'
+                              ? 'var(--tint-danger)'
                               : isPending
-                                ? '#fffbeb15'
+                                ? 'var(--tint-warning)'
                                 : isApproved
-                                  ? '#f0fdf410'
+                                  ? 'var(--tint-success)'
                                   : 'transparent'
                           }}
                         >
@@ -1083,20 +1071,20 @@ export const DailyParade = () => {
             {!loading && (
               <div className="d-flex gap-2 flex-wrap">
                 {[
-                  { label: 'Total', count: displayStudents.length, color: '#3b82f6' },
+                  { label: 'Total', count: displayStudents.length, color: '#2c5ea8' },
                   {
                     label: 'Present',
                     count: displayStudents.filter(
                       (s) => (paradeRecords[s.id]?.status || 'Present') === 'Present'
                     ).length,
-                    color: '#059669'
+                    color: '#1f7a4d'
                   },
                   {
                     label: 'Absent',
                     count: displayStudents.filter(
                       (s) => (paradeRecords[s.id]?.status || 'Present') !== 'Present'
                     ).length,
-                    color: '#dc2626'
+                    color: '#b42318'
                   }
                 ].map((pill) => (
                   <div
@@ -1218,7 +1206,7 @@ export const DailyParade = () => {
                                 </div>
                               </td>
                               <td>
-                                <span className="badge" style={{ background: '#eff6ff', color: '#2563eb', fontSize: '0.73rem' }}>
+                                <span className="badge" style={{ background: 'var(--tint-primary)', color: '#2c5ea8', fontSize: '0.73rem' }}>
                                   {student.trade || '—'}
                                 </span>
                               </td>
@@ -1261,8 +1249,8 @@ export const DailyParade = () => {
                 <div
                   className="card slaf-card p-4 shadow-sm"
                   style={{
-                    border: '2px solid #3b82f630',
-                    background: 'linear-gradient(135deg,#f0f9ff,#eff6ff)'
+                    border: '1px solid var(--tint-primary-border)',
+                    background: 'var(--tint-primary)'
                   }}
                 >
                   <h6 className="fw-bold text-primary mb-3">
@@ -1481,7 +1469,7 @@ export const DailyParade = () => {
             <div className="row g-3">
               {pendingApprovals.map((sub) => (
                 <div key={sub.id} className="col-12">
-                  <div className="card slaf-card p-0 shadow-sm" style={{ borderLeft: '5px solid #f59e0b' }}>
+                  <div className="card slaf-card p-0 shadow-sm" style={{ borderLeft: '5px solid #b26a00' }}>
                     <div className="card-body p-4">
                       <div className="d-flex justify-content-between align-items-start flex-wrap gap-3">
                         <div className="d-flex gap-4 flex-wrap">
@@ -1738,7 +1726,7 @@ export const DailyParade = () => {
                         </tr>
                         {expandedHistory === sub.id && (
                           <tr>
-                            <td colSpan="8" style={{ background: '#f8fafc' }}>
+                            <td colSpan="8" style={{ background: 'var(--bg-subtle)' }}>
                               <div className="p-3">
                                 <div className="row g-3 small">
                                   {sub.submitter_remarks && (

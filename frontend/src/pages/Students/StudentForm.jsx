@@ -292,10 +292,11 @@ export const StudentForm = () => {
 
   return (
     <div className="fade-in-slide">
-      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+      <div className="page-header">
         <div>
-          <h2 className="mb-0 text-primary display-font fs-3">{isEdit ? 'Modify Profile' : 'Register New Trainee'}</h2>
-          <p className="text-muted mb-0 small">{isEdit ? `Edit details for service number ${formData.service_number}` : 'Add a new student profile to single source of truth'}</p>
+          <span className="page-eyebrow">Trainees</span>
+          <h2 className="page-title">{isEdit ? 'Edit trainee' : 'Register a new trainee'}</h2>
+          <p className="page-subtitle">{isEdit ? `Updating the record for service number ${formData.service_number}` : 'Fields marked * are required.'}</p>
         </div>
         <div className="d-flex gap-2 w-100 w-sm-auto justify-content-start justify-content-sm-end">
           {!isEdit && (

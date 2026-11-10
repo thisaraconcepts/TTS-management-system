@@ -410,20 +410,21 @@ export const UserManagement = () => {
   return (
     <div className="fade-in-slide">
       {/* Header Banner */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+      <div className="page-header">
         <div>
-          <h2 className="mb-0 text-primary display-font fs-3">User & Security Administration</h2>
-          <p className="text-muted mb-0 small">Enterprise RBAC control, account governance, audit trails, and security settings</p>
+          <span className="page-eyebrow">Administration</span>
+          <h2 className="page-title">Users & security</h2>
+          <p className="page-subtitle">Accounts, roles and permissions, audit trail and backups.</p>
         </div>
         <div className="d-flex gap-2 flex-wrap">
-          <button className="btn btn-outline-dark btn-sm fw-semibold shadow-xs d-flex align-items-center gap-1.5" onClick={() => setShowReportModal(true)}>
-            <i className="bi bi-printer text-primary"></i> Print User Directory
+          <button className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5" onClick={() => setShowReportModal(true)}>
+            <i className="bi bi-printer"></i> Print user directory
           </button>
           <button className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5" onClick={() => refreshAllData()}>
-            <i className="bi bi-arrow-clockwise"></i> Refresh Data
+            <i className="bi bi-arrow-clockwise"></i> Refresh
           </button>
-          <button className="btn btn-warning btn-sm fw-semibold text-dark d-flex align-items-center gap-1.5" onClick={handleTriggerBackup}>
-            <i className="bi bi-database-fill-up"></i> Dump Backup
+          <button className="btn btn-primary btn-sm d-flex align-items-center gap-1.5" onClick={handleTriggerBackup}>
+            <i className="bi bi-database-down"></i> Back up database
           </button>
         </div>
       </div>

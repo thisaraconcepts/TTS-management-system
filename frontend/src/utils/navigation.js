@@ -18,7 +18,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'student:read',
     icon: 'bi-people-fill',
     category: 'Operational',
-    color: '#3b82f6',
+    color: '#2c5ea8',
     bgColor: 'rgba(59, 130, 246, 0.1)',
     description: 'Master trainee directory, personal service dossiers, rank allocation & QR identification.'
   },
@@ -30,7 +30,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'parade:read',
     icon: 'bi-clipboard2-check-fill',
     category: 'Operational',
-    color: '#059669',
+    color: '#1f7a4d',
     bgColor: 'rgba(5, 150, 105, 0.1)',
     description: 'Morning muster accountability, instructor submissions, approval workflow & night roll call.'
   },
@@ -42,7 +42,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'room:read',
     icon: 'bi-house-door-fill',
     category: 'Facilities',
-    color: '#0891b2',
+    color: '#2f6f86',
     bgColor: 'rgba(8, 145, 178, 0.1)',
     description: 'Billet building inventory, bunk bed top/bottom allocations & live vacancy map.'
   },
@@ -54,7 +54,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'academic:read',
     icon: 'bi-journal-bookmark-fill',
     category: 'Academic',
-    color: '#6366f1',
+    color: '#4d5f8f',
     bgColor: 'rgba(99, 102, 241, 0.1)',
     description: 'Course structures, trades, subjects, lessons, cloud lesson plans & syllabus tracking.'
   },
@@ -66,7 +66,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'academic:read',
     icon: 'bi-calendar-check-fill',
     category: 'Academic',
-    color: '#8b5cf6',
+    color: '#6e5a8a',
     bgColor: 'rgba(139, 92, 246, 0.1)',
     description: 'Period-wise timetable master, classroom attendance registers & calendar synchronization.'
   },
@@ -78,7 +78,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'personal_occurrence:read',
     icon: 'bi-shield-exclamation',
     category: 'Discipline',
-    color: '#d97706',
+    color: '#b26a00',
     bgColor: 'rgba(217, 119, 6, 0.1)',
     description: 'Trainee disciplinary records, commendations, medical infractions & punishment logs.'
   },
@@ -90,7 +90,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'reports:read',
     icon: 'bi-file-earmark-bar-graph-fill',
     category: 'Analytics',
-    color: '#ec4899',
+    color: '#6e5a8a',
     bgColor: 'rgba(236, 72, 153, 0.1)',
     description: 'Formal SLAF registers, printable strength registers, official PDF & Excel compilations.'
   },
@@ -102,7 +102,7 @@ export const SYSTEM_MODULES = [
     permissionCode: 'system:audit',
     icon: 'bi-shield-lock-fill',
     category: 'Governance',
-    color: '#dc2626',
+    color: '#b42318',
     bgColor: 'rgba(220, 38, 38, 0.1)',
     description: 'User provisioning, RBAC role permissions, session audit logs & system health.'
   }

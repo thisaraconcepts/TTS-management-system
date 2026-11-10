@@ -48,173 +48,59 @@ export const AcademicDashboard = ({ onNavigate }) => {
 
   return (
     <div className="fade-in-slide">
-      {/* ERP Welcome Header Banner */}
-      <div className="card slaf-card bg-primary text-white p-4 mb-4 position-relative overflow-hidden border-0 shadow-md">
-        <div className="position-absolute end-0 bottom-0 opacity-10 pe-4 pb-2 d-none d-md-block">
-          <i className="bi bi-journal-bookmark-fill display-1"></i>
+      {/* Page header */}
+      <div className="page-header">
+        <div>
+          <span className="page-eyebrow">Academics</span>
+          <h2 className="page-title">Academic overview</h2>
+          <p className="page-subtitle">Trades, courses, batches, classrooms and upcoming examinations.</p>
         </div>
-        <div className="row align-items-center g-3">
-          <div className="col-12 col-lg-8">
-            <span className="badge bg-white text-primary fw-bold text-uppercase px-3 py-1 mb-2">
-              SLAF TTS Academic Portal
-            </span>
-            <h3 className="fw-extrabold display-font mb-1 fs-4 fs-md-3">Academic Activities Executive Dashboard</h3>
-            <p className="mb-0 text-white-50 small">
-              Single Source of Truth (SSOT) for Trade Training, Course Curriculum, Classrooms & Examination Metrics.
-            </p>
-          </div>
-          <div className="col-12 col-lg-4 text-start text-lg-end">
-            <button className="btn btn-light text-primary fw-semibold btn-sm me-2 shadow-sm" onClick={fetchDashboardData}>
-              <i className="bi bi-arrow-clockwise me-1"></i> Refresh Data
-            </button>
-            <button className="btn btn-outline-light fw-semibold btn-sm shadow-sm" onClick={() => onNavigate('batches')}>
-              <i className="bi bi-plus-circle me-1"></i> New Batch
-            </button>
-          </div>
+        <div className="d-flex gap-2 flex-wrap">
+          <button className="btn btn-outline-secondary btn-sm" onClick={fetchDashboardData}>
+            <i className="bi bi-arrow-clockwise me-1"></i> Refresh
+          </button>
+          <button className="btn btn-primary btn-sm" onClick={() => onNavigate('batches')}>
+            <i className="bi bi-plus-lg me-1"></i> New batch
+          </button>
         </div>
       </div>
 
-      {/* 8 Primary ERP Summary Tiles */}
-      <div className="row g-3 mb-4">
-        {/* Total Trades */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-primary shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('trades')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Total Trades</span>
-              <div className="bg-primary-subtle text-primary rounded-circle p-2">
-                <i className="bi bi-wrench-adjustable fs-5"></i>
+      {/* Summary tiles */}
+      <div className="row g-3 mb-4 row-cols-2 row-cols-md-3 row-cols-xl-5">
+        {[
+          { label: 'Trades', value: stats.total_trades, foot: 'Technical categories', icon: 'bi-wrench-adjustable', to: 'trades' },
+          { label: 'Courses', value: stats.total_courses, foot: 'Basic & advanced', icon: 'bi-book-half', to: 'courses' },
+          { label: 'Active batches', value: stats.active_batches, foot: 'In progress', icon: 'bi-layers', to: 'batches', tone: 'accent-success' },
+          { label: 'Active instructors', value: stats.active_instructors, foot: 'Portal users', icon: 'bi-person-badge', to: 'instructors' },
+          { label: 'Active trainees', value: stats.active_students, foot: 'From trainee records', icon: 'bi-people' },
+          { label: 'Available classrooms', value: stats.available_classrooms, foot: `${stats.classroom_utilization_rate}% occupancy`, icon: 'bi-door-open', to: 'classrooms' },
+          { label: 'Upcoming phase tests', value: stats.upcoming_phase_tests, foot: 'Scheduled', icon: 'bi-journal-check', to: 'phase-tests', tone: stats.upcoming_phase_tests ? 'accent-warning' : '' },
+          { label: 'Final examinations', value: stats.upcoming_final_exams, foot: 'Passing-out exams', icon: 'bi-award', to: 'final-exams' },
+          { label: 'Course calendars', value: stats.total_courses || 0, foot: 'View master calendars', icon: 'bi-calendar-range', to: 'calendar' },
+          { label: 'Pending instructors', value: stats.pending_instructor_assignments || 0, foot: 'Nomination pending', icon: 'bi-person-exclamation', to: 'calendar', tone: stats.pending_instructor_assignments ? 'accent-danger' : '' },
+        ].map((t) => (
+          <div key={t.label} className="col">
+            {t.to ? (
+              <button type="button" className={`stat-tile stat-tile-link w-100 text-start ${t.tone || ''}`} onClick={() => onNavigate(t.to)}>
+                <div className="d-flex justify-content-between align-items-start gap-2">
+                  <span className="stat-label">{t.label}</span>
+                  <i className={`bi ${t.icon} text-muted`}></i>
+                </div>
+                <div className="stat-value">{t.value}</div>
+                <div className="stat-foot">{t.foot}</div>
+              </button>
+            ) : (
+              <div className={`stat-tile ${t.tone || ''}`}>
+                <div className="d-flex justify-content-between align-items-start gap-2">
+                  <span className="stat-label">{t.label}</span>
+                  <i className={`bi ${t.icon} text-muted`}></i>
+                </div>
+                <div className="stat-value">{t.value}</div>
+                <div className="stat-foot">{t.foot}</div>
               </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.total_trades}</h2>
-            <small className="text-muted"><i className="bi bi-shield-check text-success me-1"></i>Technical Categories</small>
+            )}
           </div>
-        </div>
-
-        {/* Total Courses */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-info shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('courses')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Total Courses</span>
-              <div className="bg-info-subtle text-info rounded-circle p-2">
-                <i className="bi bi-book-half fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.total_courses}</h2>
-            <small className="text-muted"><i className="bi bi-info-circle text-info me-1"></i>Basic & Advance</small>
-          </div>
-        </div>
-
-        {/* Active Batches */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-success shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('batches')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Active Batches</span>
-              <div className="bg-success-subtle text-success rounded-circle p-2">
-                <i className="bi bi-layers-fill fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.active_batches}</h2>
-            <small className="text-success fw-semibold"><i className="bi bi-activity me-1"></i>In Progress</small>
-          </div>
-        </div>
-
-        {/* Active Instructors */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-warning shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('instructors')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Active Instructors</span>
-              <div className="bg-warning-subtle text-warning rounded-circle p-2">
-                <i className="bi bi-person-badge-fill fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.active_instructors}</h2>
-            <small className="text-muted"><i className="bi bi-person-check text-warning me-1"></i>SSOT User Portal</small>
-          </div>
-        </div>
-
-        {/* Active Students */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-secondary shadow-sm">
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Active Trainees</span>
-              <div className="bg-secondary-subtle text-dark rounded-circle p-2">
-                <i className="bi bi-people-fill fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.active_students}</h2>
-            <small className="text-muted"><i className="bi bi-check-circle me-1"></i>Central Student SSOT</small>
-          </div>
-        </div>
-
-        {/* Available Classrooms */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-teal shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('classrooms')} style={{ borderLeftColor: '#0d9488' }}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Available Classrooms</span>
-              <div className="bg-teal-subtle text-teal rounded-circle p-2" style={{ backgroundColor: '#ccfbf1', color: '#0f766e' }}>
-                <i className="bi bi-door-open-fill fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.available_classrooms}</h2>
-            <small className="text-muted"><i className="bi bi-percent me-1"></i>{stats.classroom_utilization_rate}% Occupancy</small>
-          </div>
-        </div>
-
-        {/* Upcoming Phase Tests */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-danger shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('phase-tests')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Upcoming Phase Tests</span>
-              <div className="bg-danger-subtle text-danger rounded-circle p-2">
-                <i className="bi bi-journal-check fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.upcoming_phase_tests}</h2>
-            <small className="text-danger fw-semibold"><i className="bi bi-clock-history me-1"></i>Scheduled</small>
-          </div>
-        </div>
-
-        {/* Upcoming Final Exams */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-dark shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('final-exams')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Final Examinations</span>
-              <div className="bg-dark-subtle text-dark rounded-circle p-2">
-                <i className="bi bi-award-fill fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.upcoming_final_exams}</h2>
-            <small className="text-muted"><i className="bi bi-calendar-event me-1"></i>Passing Out Exams</small>
-          </div>
-        </div>
-
-        {/* Course Calendars */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('calendar')} style={{ borderLeftColor: '#6366f1' }}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Course Calendars</span>
-              <div className="rounded-circle p-2" style={{ backgroundColor: '#e0e7ff', color: '#4338ca' }}>
-                <i className="bi bi-calendar-range-fill fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.total_courses || 0}</h2>
-            <small className="text-primary fw-semibold"><i className="bi bi-arrow-right-circle me-1"></i>View Master Calendars</small>
-          </div>
-        </div>
-
-        {/* Pending Instructor Assignments */}
-        <div className="col-6 col-md-4 col-xl-3">
-          <div className="card slaf-card h-100 p-3 border-start border-4 border-warning shadow-sm hover-elevate cursor-pointer" onClick={() => onNavigate('calendar')}>
-            <div className="d-flex justify-content-between align-items-center mb-2">
-              <span className="text-muted small fw-bold text-uppercase">Pending Instructors</span>
-              <div className="bg-warning-subtle text-warning rounded-circle p-2">
-                <i className="bi bi-exclamation-triangle-fill fs-5"></i>
-              </div>
-            </div>
-            <h2 className="fw-extrabold display-font mb-0 text-dark">{stats.pending_instructor_assignments || 0}</h2>
-            <small className="text-warning-emphasis fw-semibold"><i className="bi bi-person-x me-1"></i>Nomination Pending</small>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Primary Landing Page Component: Academic Course Calendar */}
@@ -276,7 +162,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
               <p className="text-muted small">Real-time utilization rate of TTS Lecture Halls & Technical Labs.</p>
 
               <div className="text-center my-3">
-                <div className="d-inline-flex align-items-center justify-content-center rounded-circle border border-4 border-primary p-4 shadow-sm" style={{ width: '130px', height: '130px', backgroundColor: '#eff6ff' }}>
+                <div className="d-inline-flex align-items-center justify-content-center rounded-circle border border-4 border-primary p-4 shadow-sm" style={{ width: '130px', height: '130px', backgroundColor: 'var(--tint-primary)' }}>
                   <div>
                     <h2 className="fw-extrabold display-font text-primary mb-0">{stats.classroom_utilization_rate}%</h2>
                     <small className="text-muted fw-semibold">Utilized</small>

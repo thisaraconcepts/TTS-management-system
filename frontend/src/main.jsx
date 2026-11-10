@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import App from './App.jsx'
 import './index.css'
+import './styles/design-system.css'
 
 const queryClient = new QueryClient({
   defaultOptions: {

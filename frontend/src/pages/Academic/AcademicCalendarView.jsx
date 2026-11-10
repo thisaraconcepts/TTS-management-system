@@ -98,9 +98,9 @@ export const AcademicCalendarView = ({ onNavigate }) => {
           start: e.start_date,
           end: exclusiveEndStr,
           allDay: true,
-          backgroundColor: isUnassigned ? '#fff7ed' : '#f0f9ff',
-          borderColor: isUnassigned ? '#f97316' : '#0284c7',
-          textColor: isUnassigned ? '#c2410c' : '#0369a1',
+          backgroundColor: isUnassigned ? 'var(--tint-warning)' : 'var(--tint-primary)',
+          borderColor: isUnassigned ? '#b26a00' : '#2f6f86',
+          textColor: isUnassigned ? '#8f5500' : '#245a6e',
           extendedProps: {
             ...e,
             displayStartDate: e.start_date,

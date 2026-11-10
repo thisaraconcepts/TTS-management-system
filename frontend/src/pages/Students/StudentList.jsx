@@ -117,18 +117,19 @@ export const StudentList = () => {
 
   return (
     <div className="fade-in-slide">
-      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
+      <div className="page-header">
         <div>
-          <h2 className="mb-0 text-primary display-font fs-3">Student Registry</h2>
-          <p className="text-muted mb-0 small">Master database (Single Source of Truth) for all school trainees</p>
+          <span className="page-eyebrow">Trainees</span>
+          <h2 className="page-title">Trainee directory</h2>
+          <p className="page-subtitle">Every trainee on the school's books — search, filter and open a record.</p>
         </div>
         <div className="d-flex gap-2 flex-wrap">
-          <button className="btn btn-outline-dark btn-sm d-flex align-items-center gap-1.5 fw-semibold shadow-xs" onClick={() => setShowReportModal(true)}>
-            <i className="bi bi-printer text-primary"></i> Print Trainee Dossier Directory
+          <button className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5" onClick={() => setShowReportModal(true)}>
+            <i className="bi bi-printer"></i> Print directory
           </button>
           {hasPermission('personal_occurrence:read') && (
-            <Link to="/students/occurrences" className="btn btn-outline-danger btn-sm d-flex align-items-center gap-1.5 fw-bold">
-              <i className="bi bi-shield-exclamation"></i> Personal Occurrences
+            <Link to="/students/occurrences" className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1.5">
+              <i className="bi bi-shield-exclamation"></i> Personal occurrences
             </Link>
           )}
           {hasPermission('student:write') && (

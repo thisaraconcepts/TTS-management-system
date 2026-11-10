@@ -5,32 +5,72 @@
 
 /* Theme Design Tokens */
 :root {
-  /* Common Fonts */
-  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  
-  /* Primary Air Force Theme Colors (Light Mode) */
-  --bg-app: #f4f6fa;
+  /* Typography: one UI face, one serif for institutional headings */
+  --font-sans: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-sans);
+  --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+  /* SLAF TTS palette — navy uniform, teak & brass from the main gate */
+  --navy-950: #08162b;
+  --navy-900: #0c1f3b;
+  --navy-800: #13305a;
+  --navy-700: #1b3f73;
+  --brass: #b5893f;
+  --brass-rgb: 181, 137, 63;
+  --teak: #8a4b2a;
+
+  --bg-app: #f5f6f8;
   --bg-card: #ffffff;
-  --bg-sidebar: #0f1d3a;
-  --bg-sidebar-hover: #1e3a6d;
-  --color-primary: #1d4ed8;
-  --color-primary-rgb: 29, 78, 216;
-  --color-accent: #3b82f6;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-text-main: #1f2937;
-  --color-text-muted: #6b7280;
-  --border-color: #e5e7eb;
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-glow: 0 0 15px rgba(29, 78, 216, 0.15);
-  
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.4);
+  --bg-subtle: #f0f2f5;
+  --bg-sidebar: var(--navy-900);
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --color-primary: #1b3f73;
+  --color-primary-rgb: 27, 63, 115;
+  --color-primary-hover: #13305a;
+  --color-accent: #2c5ea8;
+  --color-success: #1f7a4d;
+  --color-warning: #b26a00;
+  --color-danger: #b42318;
+  --color-info: #2c5ea8;
+  --color-text-main: #18202c;
+  --color-text-muted: #5b6574;
+  --border-color: #dfe3e8;
+  --border-strong: #c9cfd7;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 8px;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-md: 0 2px 6px rgba(16, 24, 40, 0.07);
+  --shadow-lg: 0 8px 24px rgba(16, 24, 40, 0.12);
+  --shadow-glow: none;
+
+  --glass-bg: var(--bg-card);
+  --glass-border: var(--border-color);
+
+  /* Bootstrap brand bindings */
+  --bs-primary: #1b3f73;
+  --bs-primary-rgb: 27, 63, 115;
+  --bs-success-rgb: 31, 122, 77;
+  --bs-danger-rgb: 180, 35, 24;
+  --bs-warning-rgb: 214, 140, 18;
+  --bs-info-rgb: 44, 94, 168;
+  --bs-primary-text-emphasis: #13305a;
+  --bs-primary-bg-subtle: #e6ecf5;
+  --bs-primary-border-subtle: #b9c8de;
+  --bs-link-color: #1b3f73;
+  --bs-link-color-rgb: 27, 63, 115;
+  --bs-link-hover-color: #13305a;
+  --bs-link-hover-color-rgb: 19, 48, 90;
+  --bs-border-radius: 6px;
+  --bs-border-radius-sm: 4px;
+  --bs-border-radius-lg: 8px;
+  --bs-border-radius-xl: 10px;
+  --bs-border-radius-xxl: 12px;
+  --bs-body-font-family: var(--font-sans);
+  --bs-body-font-size: 0.9375rem;
+  --bs-focus-ring-color: rgba(27, 63, 115, 0.2);
 
   /* Bootstrap 5 Light Token Bindings */
   --bs-body-bg: var(--bg-app);
@@ -53,28 +93,42 @@
 [data-theme='dark'],
 .dark {
   /* Dark Mode tokens */
-  --bg-app: #080c14;
-  --bg-card: #111827;
-  --bg-card-hover: #172033;
-  --bg-sidebar: #080e1a;
-  --bg-sidebar-hover: #111d33;
-  --color-primary: #3b82f6;
-  --color-primary-rgb: 59, 130, 246;
-  --color-accent: #60a5fa;
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
-  --color-danger: #f87171;
-  --color-text-main: #f3f4f6;
-  --color-text-muted: #9ca3af;
-  --border-color: #374151;
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.25);
-  
-  --glass-bg: rgba(17, 24, 39, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --bg-app: #0d1117;
+  --bg-card: #151b24;
+  --bg-card-hover: #1b2330;
+  --bg-subtle: #1b2330;
+  --bg-sidebar: #0a0f16;
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.05);
+  --color-primary: #7ea6e0;
+  --color-primary-rgb: 126, 166, 224;
+  --color-primary-hover: #9dbbe8;
+  --color-accent: #7ea6e0;
+  --color-success: #4cb782;
+  --color-warning: #e0a43a;
+  --color-danger: #e5674f;
+  --color-info: #7ea6e0;
+  --color-text-main: #e6e9ee;
+  --color-text-muted: #98a2b3;
+  --border-color: #262f3c;
+  --border-strong: #333e4d;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-glow: none;
+
+  --glass-bg: var(--bg-card);
+  --glass-border: var(--border-color);
+
+  --bs-primary: #7ea6e0;
+  --bs-primary-rgb: 126, 166, 224;
+  --bs-success-rgb: 76, 183, 130;
+  --bs-danger-rgb: 229, 103, 79;
+  --bs-warning-rgb: 224, 164, 58;
+  --bs-info-rgb: 126, 166, 224;
+  --bs-link-color: #7ea6e0;
+  --bs-link-color-rgb: 126, 166, 224;
+  --bs-link-hover-color: #9dbbe8;
 
   /* Bootstrap 5 Native Dark Token Bindings */
   --bs-body-bg: var(--bg-app);
@@ -418,35 +472,31 @@ h1, h2, h3, h4, h5, h6, .display-font {
   background: var(--color-text-muted);
 }
 
-/* Glassmorphism Classes */
+/* Header & surface classes (flat, no blur) */
 .glass-header {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-md);
-  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
 }
 
-/* Premium Card Components */
+/* Card */
 .slaf-card {
   background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.slaf-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
-  border-color: rgba(var(--color-primary-rgb), 0.3);
+.slaf-card.cursor-pointer:hover,
+.slaf-card[role="button"]:hover {
+  border-color: var(--border-strong) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .kpi-card {
@@ -480,7 +530,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   left: 0;
   z-index: 1050;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
@@ -520,11 +570,14 @@ h1, h2, h3, h4, h5, h6, .display-font {
 }
 
 .slaf-sidebar .nav-link.active {
-  box-shadow: inset 3px 0 0 #3b82f6;
-  background-color: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
+  box-shadow: inset 3px 0 0 var(--brass);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
   font-weight: 600;
 }
+.slaf-sidebar .nav-link i { color: #9fb0c8; width: 18px; text-align: center; }
+.slaf-sidebar .nav-link.active i,
+.slaf-sidebar .nav-link:hover i { color: #ffffff; }
 
 /* Sidebar Sub-Navigation (Nested Menu) */
 .sidebar-nav-group {
@@ -571,14 +624,14 @@ h1, h2, h3, h4, h5, h6, .display-font {
 }
 
 .sidebar-sublink.active {
-  color: #93c5fd;
-  background-color: rgba(59, 130, 246, 0.2);
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
   font-weight: 600;
 }
 
 .sidebar-sublink.active i {
   opacity: 1;
-  color: #60a5fa;
+  color: var(--brass);
 }
 
 /* Sidebar Toggle Button (Matching attached image 2) */
@@ -698,8 +751,6 @@ body.sidebar-open {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     z-index: 1045;
   }
   .app-navbar {
@@ -739,8 +790,6 @@ body.sidebar-open {
   min-height: 75px;
   z-index: 1040;
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
   transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
@@ -822,8 +871,6 @@ body.sidebar-open {
     width: 100vw;
     height: calc(100vh - 70px);
     background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     z-index: 1035;
   }
 }

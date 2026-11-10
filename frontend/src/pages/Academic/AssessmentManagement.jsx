@@ -481,18 +481,18 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
     const isPass = num >= passMarks
 
     if (!isPass) {
-      return { grade: 'F', label: 'Fail', color: '#dc2626', bg: '#fef2f2', border: '#fecaca', isPass: false }
+      return { grade: 'F', label: 'Fail', color: '#b42318', bg: 'var(--tint-danger)', border: 'var(--tint-danger-border)', isPass: false }
     }
     if (pct >= 85) {
-      return { grade: 'A+', label: 'Distinction', color: '#15803d', bg: '#dcfce7', border: '#bbf7d0', isPass: true }
+      return { grade: 'A+', label: 'Distinction', color: '#18603c', bg: 'var(--tint-success)', border: 'var(--tint-success-border)', isPass: true }
     }
     if (pct >= 75) {
-      return { grade: 'A', label: 'Distinction', color: '#16a34a', bg: '#dcfce7', border: '#bbf7d0', isPass: true }
+      return { grade: 'A', label: 'Distinction', color: '#1f7a4d', bg: 'var(--tint-success)', border: 'var(--tint-success-border)', isPass: true }
     }
     if (pct >= 65) {
-      return { grade: 'B', label: 'Credit', color: '#2563eb', bg: '#dbeafe', border: '#bfdbfe', isPass: true }
+      return { grade: 'B', label: 'Credit', color: '#2c5ea8', bg: 'var(--tint-primary)', border: 'var(--tint-primary-border)', isPass: true }
     }
-    return { grade: 'C', label: 'Pass', color: '#4f46e5', bg: '#e0e7ff', border: '#c7d2fe', isPass: true }
+    return { grade: 'C', label: 'Pass', color: '#4d5f8f', bg: 'var(--tint-primary)', border: 'var(--tint-primary-border)', isPass: true }
   }
 
   // Batch helper: Auto-fill blank eligible trainees with pass marks
@@ -1325,8 +1325,8 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                                         className={`form-control form-control-sm text-center fw-bold marks-input-modern ${isInvalidInput ? 'is-invalid-mark' : ''}`}
                                         style={{
                                           fontSize: '1rem',
-                                          backgroundColor: hasValidMarks ? (isPass ? '#f0fdf4' : '#fef2f2') : '#f8fafc',
-                                          borderColor: hasValidMarks ? (isPass ? '#86efac' : '#fca5a5') : '#cbd5e1'
+                                          backgroundColor: hasValidMarks ? (isPass ? 'var(--tint-success)' : 'var(--tint-danger)') : 'var(--bg-subtle)',
+                                          borderColor: hasValidMarks ? (isPass ? 'var(--tint-success-border)' : 'var(--tint-danger-border)') : 'var(--border-strong)'
                                         }}
                                         value={st.marks_obtained}
                                         onChange={(e) => {
@@ -1464,7 +1464,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                       className="btn btn-primary btn-sm fw-bold shadow-sm px-3 px-md-4 py-1.5 d-inline-flex align-items-center justify-content-center gap-2 flex-grow-1 flex-sm-grow-0"
                       disabled={savingMarks}
                       style={{
-                        background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)',
+                        background: 'var(--navy-800)',
                         border: 'none'
                       }}
                     >

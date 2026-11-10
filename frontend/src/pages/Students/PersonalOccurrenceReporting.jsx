@@ -258,19 +258,18 @@ export const PersonalOccurrenceReporting = ({ initialTraineeId = null }) => {
   return (
     <div className="fade-in-slide">
       {/* Header Banner */}
-      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-3">
+      <div className="page-header">
         <div>
-          <h4 className="fw-extrabold text-dark mb-0 display-font fs-4">Personal Occurrence Reporting</h4>
-          <p className="text-muted small mb-0">
-            Restricted Personnel Management SSOT for Trainee Achievements & Misconduct Records.
-          </p>
+          <span className="page-eyebrow">Trainees · Restricted</span>
+          <h2 className="page-title">Personal occurrences</h2>
+          <p className="page-subtitle">Commendations, disciplinary and medical records for trainees.</p>
         </div>
-        <div className="d-flex gap-2 flex-wrap w-100 w-sm-auto justify-content-start justify-content-sm-end">
-          <button className="btn btn-outline-dark btn-sm fw-semibold shadow-xs" onClick={() => setShowReportModal(true)}>
-            <i className="bi bi-printer me-1 text-primary"></i> Print Dossier
+        <div className="d-flex gap-2 flex-wrap">
+          <button className="btn btn-outline-secondary btn-sm" onClick={() => setShowReportModal(true)}>
+            <i className="bi bi-printer me-1"></i> Print dossier
           </button>
           {hasPermission('personal_occurrence:write') && (
-            <button className="btn btn-primary btn-sm fw-bold shadow-sm" onClick={handleOpenCreate}>
+            <button className="btn btn-primary btn-sm" onClick={handleOpenCreate}>
               <i className="bi bi-plus-lg me-1"></i> Add Occurrence
             </button>
           )}

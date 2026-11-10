@@ -5,21 +5,21 @@ import { useAuth } from '../../context/AuthContext'
 import { ClassicalReportModal } from '../../components/ClassicalReportModal'
 
 const STATUS_OPTIONS = [
-  { value: 'Present', label: 'Present (On Parade)', color: '#059669', bg: '#ecfdf5', icon: 'bi-check-circle-fill' },
-  { value: 'Hospital', label: 'Hospital', color: '#7c3aed', bg: '#f5f3ff', icon: 'bi-hospital-fill' },
-  { value: 'Sick Report', label: 'Sick Report', color: '#d97706', bg: '#fffbeb', icon: 'bi-thermometer-high' },
-  { value: 'Leave', label: 'Leave', color: '#2563eb', bg: '#eff6ff', icon: 'bi-airplane-fill' },
-  { value: 'AWOL', label: 'AWOL', color: '#dc2626', bg: '#fef2f2', icon: 'bi-exclamation-triangle-fill' },
-  { value: 'Temporary Duty', label: 'Temporary Duty', color: '#0891b2', bg: '#ecfeff', icon: 'bi-briefcase-fill' },
-  { value: 'Course Visit', label: 'Course Visit', color: '#0891b2', bg: '#ecfeff', icon: 'bi-geo-alt-fill' },
-  { value: 'Detached Duty', label: 'Detached Duty', color: '#6d28d9', bg: '#f5f3ff', icon: 'bi-person-badge-fill' }
+  { value: 'Present', label: 'Present (On Parade)', color: '#1f7a4d', bg: 'var(--tint-success)', icon: 'bi-check-circle-fill' },
+  { value: 'Hospital', label: 'Hospital', color: '#6e5a8a', bg: 'var(--tint-plum)', icon: 'bi-hospital-fill' },
+  { value: 'Sick Report', label: 'Sick Report', color: '#b26a00', bg: 'var(--tint-warning)', icon: 'bi-thermometer-high' },
+  { value: 'Leave', label: 'Leave', color: '#2c5ea8', bg: 'var(--tint-primary)', icon: 'bi-airplane-fill' },
+  { value: 'AWOL', label: 'AWOL', color: '#b42318', bg: 'var(--tint-danger)', icon: 'bi-exclamation-triangle-fill' },
+  { value: 'Temporary Duty', label: 'Temporary Duty', color: '#2f6f86', bg: 'var(--tint-teal)', icon: 'bi-briefcase-fill' },
+  { value: 'Course Visit', label: 'Course Visit', color: '#2f6f86', bg: 'var(--tint-teal)', icon: 'bi-geo-alt-fill' },
+  { value: 'Detached Duty', label: 'Detached Duty', color: '#6e5a8a', bg: 'var(--tint-plum)', icon: 'bi-person-badge-fill' }
 ]
 
 const getStatusBadge = (status) => {
   const opt = STATUS_OPTIONS.find((s) => s.value === status) || {
     label: status || 'Unknown',
-    color: '#64748b',
-    bg: '#f1f5f9',
+    color: '#5b6574',
+    bg: 'var(--bg-subtle)',
     icon: 'bi-question-circle'
   }
   return (
@@ -473,7 +473,7 @@ export const NightParadeTab = ({
             <div className="d-flex align-items-center gap-2">
               <div
                 className="rounded-circle d-flex align-items-center justify-content-center"
-                style={{ width: '42px', height: '42px', backgroundColor: '#312e81', color: '#c7d2fe' }}
+                style={{ width: '42px', height: '42px', backgroundColor: '#1b2b4a', color: 'var(--tint-primary-border)' }}
               >
                 <i className="bi bi-moon-stars-fill fs-5" />
               </div>
@@ -642,11 +642,11 @@ export const NightParadeTab = ({
 
         {/* In Hospital */}
         <div className="col-6 col-sm-4 col-md-3 col-xl">
-          <div className="card slaf-card p-2.5 text-center h-100 shadow-xs border-top border-4" style={{ borderColor: '#7c3aed' }}>
+          <div className="card slaf-card p-2.5 text-center h-100 shadow-xs border-top border-4" style={{ borderColor: '#6e5a8a' }}>
             <div className="text-muted small fw-bold text-uppercase" style={{ fontSize: '0.72rem' }}>
               Hospital
             </div>
-            <div className="fw-bold display-6 my-0.5" style={{ color: '#7c3aed' }}>{liveStats.hospital}</div>
+            <div className="fw-bold display-6 my-0.5" style={{ color: '#6e5a8a' }}>{liveStats.hospital}</div>
             <div className="small text-muted" style={{ fontSize: '0.72rem' }}>Admitted / Inward</div>
           </div>
         </div>
@@ -689,16 +689,16 @@ export const NightParadeTab = ({
           <div
             className="card slaf-card p-2.5 text-center h-100 shadow-xs border-top border-4 cursor-pointer"
             style={{
-              borderColor: '#e11d48',
-              backgroundColor: filterMode === 'CHANGED' ? '#fff1f2' : '#fff'
+              borderColor: '#b42318',
+              backgroundColor: filterMode === 'CHANGED' ? 'var(--tint-danger)' : 'var(--bg-card)'
             }}
             onClick={() => setFilterMode(filterMode === 'CHANGED' ? 'ALL' : 'CHANGED')}
           >
             <div className="text-muted small fw-bold text-uppercase" style={{ fontSize: '0.72rem' }}>
               Status Changed
             </div>
-            <div className="fw-bold display-6 my-0.5" style={{ color: '#e11d48' }}>{liveStats.changed}</div>
-            <div className="small fw-semibold" style={{ fontSize: '0.72rem', color: '#e11d48' }}>
+            <div className="fw-bold display-6 my-0.5" style={{ color: '#b42318' }}>{liveStats.changed}</div>
+            <div className="small fw-semibold" style={{ fontSize: '0.72rem', color: '#b42318' }}>
               <i className="bi bi-arrow-left-right me-1" />
               Morn $\rightarrow$ Night
             </div>
@@ -710,8 +710,8 @@ export const NightParadeTab = ({
           <div
             className="card slaf-card p-2.5 text-center h-100 shadow-xs border-top border-4 cursor-pointer"
             style={{
-              borderColor: '#64748b',
-              backgroundColor: filterMode === 'UNVERIFIED' ? '#f1f5f9' : '#fff'
+              borderColor: '#5b6574',
+              backgroundColor: filterMode === 'UNVERIFIED' ? 'var(--bg-subtle)' : 'var(--bg-card)'
             }}
             onClick={() => setFilterMode(filterMode === 'UNVERIFIED' ? 'ALL' : 'UNVERIFIED')}
           >
@@ -900,7 +900,7 @@ export const NightParadeTab = ({
                         <tr
                           key={t.student_id}
                           style={{
-                            backgroundColor: isChanged ? '#fff1f2' : !isVerified ? '#fffbeb' : undefined
+                            backgroundColor: isChanged ? 'var(--tint-danger)' : !isVerified ? 'var(--tint-warning)' : undefined
                           }}
                         >
                           <td className="text-center text-muted fw-bold">{idx + 1}</td>
@@ -957,8 +957,8 @@ export const NightParadeTab = ({
                                 value={nStatus}
                                 onChange={(e) => handleStatusChange(t.student_id, e.target.value)}
                                 style={{
-                                  borderColor: isChanged ? '#e11d48' : '#cbd5e1',
-                                  backgroundColor: isChanged ? '#fff1f2' : '#ffffff'
+                                  borderColor: isChanged ? '#b42318' : 'var(--border-strong)',
+                                  backgroundColor: isChanged ? 'var(--tint-danger)' : 'var(--bg-card)'
                                 }}
                               >
                                 {STATUS_OPTIONS.map((opt) => (
@@ -1237,7 +1237,7 @@ export const NightParadeTab = ({
                   </tr>
                 ) : (
                   summaryData.status_transitions.map((tr, i) => (
-                    <tr key={i} style={{ backgroundColor: tr.from_status !== tr.to_status ? '#fff1f2' : undefined }}>
+                    <tr key={i} style={{ backgroundColor: tr.from_status !== tr.to_status ? 'var(--tint-danger)' : undefined }}>
                       <td>{getStatusBadge(tr.from_status)}</td>
                       <td className="text-center text-muted font-monospace">
                         <i className="bi bi-arrow-right" />
@@ -1305,7 +1305,7 @@ export const NightParadeTab = ({
                     const m = rec.morning_status || t.morning_status || 'Present'
                     const n = rec.night_status || 'Present'
                     return (
-                      <tr key={t.student_id} style={{ backgroundColor: '#fff1f2' }}>
+                      <tr key={t.student_id} style={{ backgroundColor: 'var(--tint-danger)' }}>
                         <td className="text-muted fw-bold">{idx + 1}</td>
                         <td className="font-monospace fw-bold text-primary">{t.service_number}</td>
                         <td className="fw-semibold text-dark">

@@ -83,18 +83,18 @@ export const AcademicProgress = ({ studentId }) => {
           backgroundColor: (context) => {
             const ctx = context.chart.ctx
             const gradient = ctx.createLinearGradient(0, 0, 0, 300)
-            gradient.addColorStop(0, 'rgba(14, 165, 233, 0.35)')
-            gradient.addColorStop(1, 'rgba(14, 165, 233, 0.0)')
+            gradient.addColorStop(0, 'rgba(27, 63, 115, 0.22)')
+            gradient.addColorStop(1, 'rgba(27, 63, 115, 0.0)')
             return gradient
           },
-          borderColor: '#0284c7',
+          borderColor: '#2f6f86',
           borderWidth: 3,
           pointBackgroundColor: '#ffffff',
-          pointBorderColor: '#0284c7',
+          pointBorderColor: '#2f6f86',
           pointBorderWidth: 2.5,
           pointRadius: 5.5,
           pointHoverRadius: 8,
-          pointHoverBackgroundColor: '#0284c7',
+          pointHoverBackgroundColor: '#2f6f86',
           pointHoverBorderColor: '#ffffff',
           pointHoverBorderWidth: 2,
           tension: 0.35,
@@ -134,13 +134,13 @@ export const AcademicProgress = ({ studentId }) => {
               size: 12,
               weight: 500
             },
-            color: '#64748b'
+            color: '#5b6574'
           }
         },
         tooltip: {
           backgroundColor: 'rgba(15, 23, 42, 0.92)',
           titleColor: '#ffffff',
-          bodyColor: '#e2e8f0',
+          bodyColor: 'var(--border-color)',
           padding: 12,
           boxPadding: 6,
           usePointStyle: true,
@@ -186,7 +186,7 @@ export const AcademicProgress = ({ studentId }) => {
             drawBorder: false
           },
           ticks: {
-            color: '#64748b',
+            color: '#5b6574',
             font: {
               family: 'inherit',
               size: 11,
@@ -203,7 +203,7 @@ export const AcademicProgress = ({ studentId }) => {
           },
           ticks: {
             stepSize: 20,
-            color: '#64748b',
+            color: '#5b6574',
             font: {
               family: 'inherit',
               size: 11

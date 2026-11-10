@@ -255,17 +255,16 @@ export const ReportGenerator = () => {
         <div className="d-flex align-items-center gap-2 min-w-0">
           <Link
             to={originInfo.path}
-            className="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1.5 shadow-xs fw-semibold px-2.5 py-1.5 rounded-pill flex-shrink-0"
+            className="icon-btn border flex-shrink-0"
             title={`Return to ${originInfo.label}`}
+            aria-label={`Return to ${originInfo.label}`}
           >
             <i className="bi bi-arrow-left"></i>
-            <span className="d-none d-sm-inline">{originInfo.label}</span>
           </Link>
           <div className="min-w-0">
-            <h4 className="fw-bold text-primary mb-0 display-font fs-5 fs-md-4 text-truncate">
-              <i className="bi bi-file-earmark-text-fill me-2"></i>Institutional Reporting
-            </h4>
-            <small className="text-muted d-none d-sm-block">Formal, Database-Compiled Official SLAF Registers & Tables</small>
+            <span className="page-eyebrow">Reports</span>
+            <h2 className="page-title mb-0 text-truncate">Official registers & reports</h2>
+            <small className="text-muted d-none d-sm-block">Print-ready SLAF registers compiled from live records.</small>
           </div>
         </div>
         <div className="d-flex align-items-center flex-wrap gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">

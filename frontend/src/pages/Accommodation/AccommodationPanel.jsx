@@ -306,7 +306,7 @@ export const AccommodationPanel = () => {
       labels: ['Occupied Positions', 'Available Positions'],
       datasets: [{
         data: [stats.occupied_positions, stats.available_positions],
-        backgroundColor: ['#2563eb', '#10b981'],
+        backgroundColor: ['#1b3f73', '#9fb7d6'],
         borderWidth: 0
       }]
     }
@@ -314,68 +314,71 @@ export const AccommodationPanel = () => {
     const billetChartData = {
       labels: billets.map(b => b.name),
       datasets: [
-        { label: 'Occupied', data: billets.map(b => b.current_occupancy), backgroundColor: '#2563eb' },
-        { label: 'Available', data: billets.map(b => Math.max(0, b.capacity - b.current_occupancy)), backgroundColor: '#10b981' }
+        { label: 'Occupied', data: billets.map(b => b.current_occupancy), backgroundColor: '#1b3f73', borderRadius: 3 },
+        { label: 'Available', data: billets.map(b => Math.max(0, b.capacity - b.current_occupancy)), backgroundColor: '#9fb7d6', borderRadius: 3 }
       ]
     }
 
     return (
       <div>
+        <div className="page-header">
+          <div>
+            <span className="page-eyebrow">Accommodation</span>
+            <h2 className="page-title">Billets & bed positions</h2>
+            <p className="page-subtitle">Capacity, occupancy and quick access to allocation tools.</p>
+          </div>
+        </div>
+
         {/* KPI Tiles Row */}
         <div className="row g-3 mb-4">
           {[
-            { label: 'Total Billets', val: stats.total_billets, icon: 'bi-building', bg: '#eff6ff', color: '#2563eb' },
-            { label: 'Total Bunk Beds', val: stats.total_bunk_beds, icon: 'bi-layout-three-columns', bg: '#f5f3ff', color: '#7c3aed' },
-            { label: 'Sleeping Positions (2/Bunk)', val: stats.total_sleeping_positions, icon: 'bi-door-closed', bg: '#e0f2fe', color: '#0284c7' },
-            { label: 'Occupied Positions', val: stats.occupied_positions, icon: 'bi-person-fill-check', bg: '#fef3c7', color: '#d97706' },
-            { label: 'Available Positions', val: stats.available_positions, icon: 'bi-check-circle', bg: '#dcfce7', color: '#059669' },
-            { label: 'Occupancy Rate', val: `${stats.occupancy_percentage}%`, icon: 'bi-pie-chart', bg: '#fae8ff', color: '#c026d3' },
+            { label: 'Total Billets', val: stats.total_billets, icon: 'bi-building', bg: 'var(--tint-primary)', color: '#2c5ea8' },
+            { label: 'Total Bunk Beds', val: stats.total_bunk_beds, icon: 'bi-layout-three-columns', bg: 'var(--tint-plum)', color: '#6e5a8a' },
+            { label: 'Sleeping Positions (2/Bunk)', val: stats.total_sleeping_positions, icon: 'bi-door-closed', bg: 'var(--tint-primary)', color: '#2f6f86' },
+            { label: 'Occupied Positions', val: stats.occupied_positions, icon: 'bi-person-fill-check', bg: 'var(--tint-warning)', color: '#b26a00' },
+            { label: 'Available Positions', val: stats.available_positions, icon: 'bi-check-circle', bg: 'var(--tint-success)', color: '#1f7a4d' },
+            { label: 'Occupancy Rate', val: `${stats.occupancy_percentage}%`, icon: 'bi-pie-chart', bg: 'var(--tint-plum)', color: '#6e5a8a' },
           ].map(kpi => (
-            <div key={kpi.label} className="col-6 col-md-4 col-lg-2">
-              <div className="card slaf-card p-3 h-100" style={{ borderLeft: `4px solid ${kpi.color}` }}>
-                <div className="d-flex justify-content-between align-items-center mb-1">
-                  <span className="text-muted" style={{ fontSize: '0.75rem', fontWeight: 600 }}>{kpi.label}</span>
-                  <div className="rounded-circle p-2 d-flex align-items-center justify-content-center" style={{ background: kpi.bg, color: kpi.color, width: 32, height: 32 }}>
-                    <i className={`bi ${kpi.icon}`} style={{ fontSize: '1rem' }} />
-                  </div>
+            <div key={kpi.label} className="col-6 col-md-4 col-xl-2">
+              <div className="stat-tile">
+                <div className="d-flex justify-content-between align-items-start gap-2">
+                  <span className="stat-label">{kpi.label}</span>
+                  <i className={`bi ${kpi.icon} text-muted`} />
                 </div>
-                <div className="display-font fw-bold" style={{ fontSize: '1.4rem', color: kpi.color }}>
-                  {kpi.val}
-                </div>
+                <div className="stat-value">{kpi.val}</div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Quick Action Navigation Grid */}
-        <div className="card slaf-card p-4 mb-4">
-          <h5 className="fw-bold text-primary mb-3">
-            <i className="bi bi-grid me-2" />
-            Accommodation Quick Actions
-          </h5>
+        <div className="section-card mb-4">
+          <div className="section-card-header">
+            <h3 className="section-card-title">Quick actions</h3>
+          </div>
+          <div className="section-card-body">
           <div className="row g-3">
             {[
-              { title: 'Billet Management', desc: 'Create & view billets', icon: 'bi-building', path: '/accommodation/billets', color: '#2563eb' },
-              { title: 'Bunk Bed Register', desc: 'Manage 2-tier bunk units', icon: 'bi-layout-three-columns', path: '/accommodation/bunks', color: '#7c3aed' },
-              { title: 'Allocate Bed', desc: 'Assign trainee to TOP/BOTTOM', icon: 'bi-door-closed', path: '/accommodation/allocate', color: '#059669' },
-              { title: 'Trainees Directory', desc: 'View accommodated trainees', icon: 'bi-people', path: '/accommodation/trainees', color: '#d97706' },
-              { title: 'Transfer / Release', desc: 'Transfer or vacate positions', icon: 'bi-arrow-left-right', path: '/accommodation/transfers', color: '#0284c7' },
-              { title: 'Visual Bunk Map', desc: 'Physical 2-tier bunk cards', icon: 'bi-geo-alt', path: '/accommodation/map', color: '#c026d3' },
+              { title: 'Billet Management', desc: 'Create & view billets', icon: 'bi-building', path: '/accommodation/billets', color: '#2c5ea8' },
+              { title: 'Bunk Bed Register', desc: 'Manage 2-tier bunk units', icon: 'bi-layout-three-columns', path: '/accommodation/bunks', color: '#6e5a8a' },
+              { title: 'Allocate Bed', desc: 'Assign trainee to TOP/BOTTOM', icon: 'bi-door-closed', path: '/accommodation/allocate', color: '#1f7a4d' },
+              { title: 'Trainees Directory', desc: 'View accommodated trainees', icon: 'bi-people', path: '/accommodation/trainees', color: '#b26a00' },
+              { title: 'Transfer / Release', desc: 'Transfer or vacate positions', icon: 'bi-arrow-left-right', path: '/accommodation/transfers', color: '#2f6f86' },
+              { title: 'Visual Bunk Map', desc: 'Physical 2-tier bunk cards', icon: 'bi-geo-alt', path: '/accommodation/map', color: '#6e5a8a' },
             ].map(act => (
-              <div key={act.title} className="col-6 col-md-4 col-lg-2">
-                <div 
-                  className="card slaf-card p-3 text-center h-100 cursor-pointer hover-shadow"
-                  style={{ borderTop: `4px solid ${act.color}` }}
+              <div key={act.title} className="col-6 col-md-4 col-xl-2">
+                <button
+                  type="button"
+                  className="module-tile"
                   onClick={() => navigate(act.path)}
                 >
-                  <div className="mb-2">
-                    <i className={`bi ${act.icon}`} style={{ fontSize: '1.8rem', color: act.color }} />
-                  </div>
-                  <div className="fw-bold text-dark" style={{ fontSize: '0.88rem' }}>{act.title}</div>
-                  <div className="text-muted" style={{ fontSize: '0.72rem' }}>{act.desc}</div>
-                </div>
+                  <span className="module-tile-icon mb-3"><i className={`bi ${act.icon}`} /></span>
+                  <span className="fw-semibold" style={{ fontSize: '0.88rem' }}>{act.title}</span>
+                  <span className="text-muted" style={{ fontSize: '0.75rem' }}>{act.desc}</span>
+                </button>
               </div>
             ))}
+          </div>
           </div>
         </div>
 
@@ -568,7 +571,7 @@ export const AccommodationPanel = () => {
 
             return (
               <div key={bunk.id} className="col-md-6 col-lg-4">
-                <div className="card slaf-card p-0 border" style={{ borderColor: '#e2e8f0' }}>
+                <div className="card slaf-card p-0 border" style={{ borderColor: 'var(--border-color)' }}>
                   {/* Bunk Header */}
                   <div className="card-header bg-app d-flex justify-content-between align-items-center py-2 px-3">
                     <span className="fw-bold text-primary">
@@ -586,18 +589,18 @@ export const AccommodationPanel = () => {
                     <div 
                       className="p-2 mb-2 rounded border" 
                       style={{ 
-                        background: topPos.status === 'Occupied' ? '#eff6ff' : '#f0fdf4',
-                        borderColor: topPos.status === 'Occupied' ? '#bfdbfe' : '#bbf7d0' 
+                        background: topPos.status === 'Occupied' ? 'var(--tint-primary)' : 'var(--tint-success)',
+                        borderColor: topPos.status === 'Occupied' ? 'var(--tint-primary-border)' : 'var(--tint-success-border)' 
                       }}
                     >
                       <div className="d-flex justify-content-between align-items-center mb-1">
-                        <span className="fw-bold" style={{ fontSize: '0.8rem', color: '#1e293b' }}>
+                        <span className="fw-bold" style={{ fontSize: '0.8rem', color: 'var(--color-text-main)' }}>
                           <i className="bi bi-arrow-up-circle me-1 text-primary" />TOP: {topPos.position_code}
                         </span>
                         <span 
                           className="badge" 
                           style={{ 
-                            background: topPos.status === 'Occupied' ? '#2563eb' : '#10b981',
+                            background: topPos.status === 'Occupied' ? '#2c5ea8' : '#1f7a4d',
                             fontSize: '0.68rem'
                           }}
                         >
@@ -636,18 +639,18 @@ export const AccommodationPanel = () => {
                     <div 
                       className="p-2 rounded border" 
                       style={{ 
-                        background: bottomPos.status === 'Occupied' ? '#eff6ff' : '#f0fdf4',
-                        borderColor: bottomPos.status === 'Occupied' ? '#bfdbfe' : '#bbf7d0' 
+                        background: bottomPos.status === 'Occupied' ? 'var(--tint-primary)' : 'var(--tint-success)',
+                        borderColor: bottomPos.status === 'Occupied' ? 'var(--tint-primary-border)' : 'var(--tint-success-border)' 
                       }}
                     >
                       <div className="d-flex justify-content-between align-items-center mb-1">
-                        <span className="fw-bold" style={{ fontSize: '0.8rem', color: '#1e293b' }}>
+                        <span className="fw-bold" style={{ fontSize: '0.8rem', color: 'var(--color-text-main)' }}>
                           <i className="bi bi-arrow-down-circle me-1 text-success" />BOTTOM: {bottomPos.position_code}
                         </span>
                         <span 
                           className="badge" 
                           style={{ 
-                            background: bottomPos.status === 'Occupied' ? '#2563eb' : '#10b981',
+                            background: bottomPos.status === 'Occupied' ? '#2c5ea8' : '#1f7a4d',
                             fontSize: '0.68rem'
                           }}
                         >
@@ -891,7 +894,7 @@ export const AccommodationPanel = () => {
                       <span className="badge bg-secondary-subtle text-dark" style={{ fontSize: '0.68rem' }}>{alloc.student_rank}</span>
                     </td>
                     <td>
-                      <span className="badge" style={{ background: '#eff6ff', color: '#2563eb', fontSize: '0.75rem' }}>
+                      <span className="badge" style={{ background: 'var(--tint-primary)', color: '#2c5ea8', fontSize: '0.75rem' }}>
                         {alloc.student_trade || '—'}
                       </span>
                     </td>
@@ -909,7 +912,7 @@ export const AccommodationPanel = () => {
                         {alloc.parade_status || 'Present'}
                       </span>
                     </td>
-                    <td style={{ fontSize: '0.82rem', color: '#64748b' }}>
+                    <td style={{ fontSize: '0.82rem', color: '#5b6574' }}>
                       {alloc.allocated_at ? new Date(alloc.allocated_at).toLocaleDateString() : '—'}
                     </td>
                     <td className="text-end">
@@ -1082,13 +1085,13 @@ export const AccommodationPanel = () => {
                     <td><span className="badge bg-secondary">{h.position_code || '—'}</span></td>
                     <td>{h.billet_name || '—'}</td>
                     <td style={{ fontSize: '0.82rem' }}>{h.allocated_at ? new Date(h.allocated_at).toLocaleDateString() : '—'}</td>
-                    <td style={{ fontSize: '0.82rem', color: '#dc2626' }}>{h.vacated_at ? new Date(h.vacated_at).toLocaleDateString() : '—'}</td>
+                    <td style={{ fontSize: '0.82rem', color: '#b42318' }}>{h.vacated_at ? new Date(h.vacated_at).toLocaleDateString() : '—'}</td>
                     <td>
                       <span className="badge bg-danger-subtle text-danger" style={{ fontSize: '0.73rem' }}>
                         {h.vacate_reason || '—'}
                       </span>
                     </td>
-                    <td style={{ fontSize: '0.82rem', color: '#64748b' }}>{h.remarks || '—'}</td>
+                    <td style={{ fontSize: '0.82rem', color: '#5b6574' }}>{h.remarks || '—'}</td>
                   </tr>
                 ))
               )}
