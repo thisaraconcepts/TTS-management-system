@@ -585,7 +585,7 @@ export const Landing = () => {
           <div className="row align-items-center justify-content-between g-3">
             <div className="col-md-6 text-center text-md-start">
               <span className="fw-bold text-info">SLAF Trade Training School</span>
-              <span className="text-white-50 ms-2">| Management Portal v1.0</span>
+              <span className="text-white-50 ms-2">| Management Portal 0.9.0-beta</span>
             </div>
             <div className="col-md-6 text-center text-md-end text-white-50" style={{ fontSize: '0.85rem' }}>
               Copyright © 2026 Sri Lanka Air Force. All rights reserved. <br />
