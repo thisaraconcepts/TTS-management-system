@@ -775,10 +775,20 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
       {/* Create Exam Modal */}
       {showExamModal && (
-        <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
-          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content slaf-card shadow-lg border-0">
-              <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between">
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060, overflowY: 'auto' }}
+          tabIndex="-1"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable my-3 my-sm-4" style={{ maxWidth: '600px', width: '95%' }}>
+            <form
+              onSubmit={handleCreateExam}
+              className="modal-content slaf-card shadow-lg border-0"
+              style={{ maxHeight: 'calc(100vh - 3rem)', display: 'flex', flexDirection: 'column' }}
+            >
+              <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between flex-shrink-0">
                 <div>
                   <h5 className="modal-title display-font text-primary fw-bold mb-0">
                     <i className="bi bi-calendar-plus me-2"></i>Schedule Examination
@@ -789,8 +799,8 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                 </div>
                 <button type="button" className="btn-close" onClick={() => setShowExamModal(false)} aria-label="Close"></button>
               </div>
-              <form onSubmit={handleCreateExam}>
-                <div className="modal-body p-3 p-md-4">
+
+              <div className="modal-body p-3 p-md-4" style={{ overflowY: 'auto', flex: '1 1 auto', overscrollBehavior: 'contain' }}>
                   {/* Ongoing Course Selector */}
                   <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-1">
@@ -978,7 +988,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top bg-light-subtle d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                <div className="modal-footer border-top bg-light-subtle d-flex flex-column-reverse flex-sm-row justify-content-end gap-2 flex-shrink-0">
                   <button
                     type="button"
                     className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
@@ -1006,7 +1016,6 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </button>
                 </div>
               </form>
-            </div>
           </div>
         </div>
       )}
@@ -1495,17 +1504,27 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
       {/* Controlled Officer Override Modal */}
       {showOverrideModal && overrideStudent && (
-        <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.65)', zIndex: 1070 }}>
-          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content slaf-card shadow-lg border-0">
-              <div className="modal-header border-bottom bg-warning-subtle py-2.5 px-3">
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.65)', zIndex: 1070, overflowY: 'auto' }}
+          tabIndex="-1"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable my-3 my-sm-4" style={{ maxWidth: '600px', width: '95%' }}>
+            <form
+              onSubmit={handleSubmitOverride}
+              className="modal-content slaf-card shadow-lg border-0"
+              style={{ maxHeight: 'calc(100vh - 3rem)', display: 'flex', flexDirection: 'column' }}
+            >
+              <div className="modal-header border-bottom bg-warning-subtle py-2.5 px-3 flex-shrink-0">
                 <h6 className="modal-title display-font text-dark fw-bold mb-0 text-truncate">
                   <i className="bi bi-shield-lock-fill text-warning me-2"></i>Authorize Eligibility Override
                 </h6>
                 <button type="button" className="btn-close" onClick={() => setShowOverrideModal(false)}></button>
               </div>
-              <form onSubmit={handleSubmitOverride}>
-                <div className="modal-body p-3">
+
+              <div className="modal-body p-3" style={{ overflowY: 'auto', flex: '1 1 auto', overscrollBehavior: 'contain' }}>
                   <div className="alert alert-warning py-2 px-3 mb-3 border" style={{ fontSize: '0.8rem' }}>
                     <i className="bi bi-exclamation-triangle-fill me-1.5"></i>
                     <strong>Official Audit Notice:</strong> This action allows an ineligible trainee (status: <strong>{overrideStudent.parade_state_status}</strong>) to sit the examination. All overrides are permanently recorded in the system audit trail.
@@ -1549,7 +1568,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                     />
                   </div>
                 </div>
-                <div className="modal-footer border-top bg-light py-2 d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                <div className="modal-footer border-top bg-light py-2 d-flex flex-column-reverse flex-sm-row justify-content-end gap-2 flex-shrink-0">
                   <button type="button" className="btn btn-outline-secondary btn-sm w-100 w-sm-auto" onClick={() => setShowOverrideModal(false)}>
                     Cancel
                   </button>
@@ -1571,7 +1590,6 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </button>
                 </div>
               </form>
-            </div>
           </div>
         </div>
       )}
