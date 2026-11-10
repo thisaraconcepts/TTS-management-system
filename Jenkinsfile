@@ -23,14 +23,13 @@ pipeline {
                 sh '''
                     echo "Preparing deployment files..."
                     
-                    # Ensure target directory exists
-                    mkdir -p /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html
+                    # Copy to a staging folder inside jenkins_home first (which Jenkins owns)
+                    STAGING_DIR="/var/jenkins_home/deploy_staging"
+                    mkdir -p $STAGING_DIR
+                    rm -rf $STAGING_DIR/*
+                    cp -r frontend/dist/* $STAGING_DIR/
                     
-                    echo "Copying build files to web root..."
-                    rm -rf /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/*
-                    cp -r frontend/dist/* /home/itwekala-ttsmp/htdocs/ttsmp.itwekala.com.lk/public_html/
-                    
-                    echo "Deployment completed successfully!"
+                    echo "Files staged successfully at $STAGING_DIR"
                 '''
             }
         }
