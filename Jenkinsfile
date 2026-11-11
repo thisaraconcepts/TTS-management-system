@@ -1,5 +1,15 @@
 pipeline {
     agent any
+
+    options {
+        timeout(time: 15, unit: 'MINUTES')
+        disableConcurrentBuilds()
+    }
+
+    environment {
+        NODE_OPTIONS = '--max-old-space-size=512'
+    }
+
     stages {
         stage('Build Frontend') {
             steps {
@@ -17,17 +27,27 @@ pipeline {
                         fi
                         
                         export PATH=$PWD/node-$VERSION-$DISTRO/bin:$PATH
+                        export NODE_OPTIONS="--max-old-space-size=512"
                         
-                        echo "Installing dependencies..."
-                        npm install
+                        echo "Node version: $(node -v), NPM version: $(npm -v)"
+                        
+                        echo "Installing dependencies (cached/offline preferred)..."
+                        npm install --prefer-offline --no-audit --no-fund
                         chmod +x node_modules/.bin/*
                         
                         echo "Building production frontend bundle..."
                         npm run build
+                        
+                        if [ ! -f "dist/index.html" ]; then
+                            echo "ERROR: Build failed to produce dist/index.html!"
+                            exit 1
+                        fi
+                        echo "Frontend build successfully verified in dist/."
                     '''
                 }
             }
         }
+
         stage('Deploy to Server') {
             steps {
                 sh '''
@@ -46,6 +66,15 @@ pipeline {
                     echo "Frontend successfully deployed to production web root!"
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully! TTS Portal frontend is live on https://ttsmp.itwekala.com.lk"
+        }
+        failure {
+            echo "Pipeline failed. Review build logs above for diagnostics."
         }
     }
 }
