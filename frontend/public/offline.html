@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c1f3b">
+<title>Offline · TTS Portal</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; font-family: Inter, system-ui, sans-serif; background: #f5f6f8; color: #18202c; padding: 16px; box-sizing: border-box; }
+  .box { max-width: 380px; text-align: center; background: #fff; border: 1px solid #dfe3ea; border-top: 3px solid #b5893f; padding: 28px 24px; }
+  img { width: 64px; height: 64px; object-fit: contain; border-radius: 50%; }
+  h1 { font-size: 1.15rem; margin: 14px 0 6px; }
+  p { color: #5b6576; font-size: .9rem; margin: 0 0 18px; line-height: 1.5; }
+  button { background: #1b3f73; color: #fff; border: 0; padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer; }
+  @media (prefers-color-scheme: dark) { body { background: #0b1220; color: #e6ebf2; } .box { background: #121b2b; border-color: #24324a; } p { color: #9aa7ba; } }
+</style>
+</head>
+<body>
+  <div class="box">
+    <img src="/icons/icon-192.png" alt="">
+    <h1>You're offline</h1>
+    <p>The TTS Portal needs a connection to load live records. Check the network and try again.</p>
+    <button onclick="location.reload()">Try again</button>
+  </div>
+</body>
+</html>

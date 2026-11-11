@@ -11,9 +11,9 @@ body {
   transition: none;
 }
 h1, h2, h3, h4, h5, h6, .display-font {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.005em;
 }
 .font-serif { font-family: var(--font-serif) !important; }
 .text-brass { color: var(--brass) !important; }
@@ -245,6 +245,15 @@ h1, h2, h3, h4, h5, h6, .display-font {
   font-size: 0.72rem;
   letter-spacing: 0.04em;
 }
+.sidebar-brand-mark.brand-crest {
+  width: 40px; height: 40px; min-width: 40px;
+  border-radius: 50%;
+  background: #fff;
+  padding: 2px;
+  object-fit: contain;
+  box-shadow: 0 0 0 1px rgba(181, 137, 63, 0.55);
+}
+.auth-crest { width: auto; height: 76px; max-width: 100%; object-fit: contain; display: block; border-radius: 0 !important; }
 .sidebar-brand-title { color: #fff; font-weight: 600; font-size: 0.9rem; line-height: 1.15; }
 .sidebar-brand-sub { color: #8898b0; font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; }
 .slaf-sidebar .sidebar-module-header {
@@ -354,7 +363,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
 .hero-content { position: relative; z-index: 2; padding-top: 9rem; padding-bottom: 4rem; width: 100%; }
 .hero-kicker { display: inline-flex; align-items: center; gap: .6rem; font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #e3c48c; }
 .hero-kicker::before { content: ""; width: 28px; height: 1px; background: #e3c48c; }
-.hero-title { font-family: var(--font-serif); font-weight: 600; font-size: clamp(2.1rem, 5vw, 3.6rem); line-height: 1.08; letter-spacing: -0.015em; margin: 1rem 0; max-width: 17ch; }
+.hero-title { font-family: var(--font-serif); font-weight: 600; font-size: clamp(2.1rem, 5vw, 3.6rem); line-height: 1.08; letter-spacing: 0; margin: 1rem 0; max-width: 17ch; }
 .hero-lead { font-size: clamp(1rem, 1.6vw, 1.12rem); color: rgba(255,255,255,.82); max-width: 56ch; margin-bottom: 2rem; }
 .hero-sinhala { font-size: .95rem; color: #e3c48c; margin-bottom: 0; }
 
@@ -380,7 +389,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
 .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .photo-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: .9rem 1rem .75rem; font-size: .78rem; color: #fff; background: linear-gradient(0deg, rgba(0,0,0,.65), transparent); }
 
-.vision-quote { font-family: var(--font-serif); font-size: clamp(1.1rem, 2vw, 1.35rem); line-height: 1.5; border-left: 3px solid var(--brass); padding-left: 1.25rem; margin: 1.5rem 0; }
+.vision-quote { font-family: var(--font-sans); font-style: italic; font-weight: 400; font-size: clamp(1.1rem, 2vw, 1.35rem); line-height: 1.5; border-left: 3px solid var(--brass); padding-left: 1.25rem; margin: 1.5rem 0; }
 .vision-quote cite { display: block; font-family: var(--font-sans); font-style: normal; font-size: .78rem; color: var(--color-text-muted); margin-top: .6rem; letter-spacing: .04em; text-transform: uppercase; }
 
 .fact-list { list-style: none; padding: 0; margin: 0; }
@@ -570,3 +579,239 @@ h1, h2, h3, h4, h5, h6, .display-font {
   letter-spacing: 0;
   color: #000 !important;
 }
+
+/* ==========================================================================
+   SQUARE GEOMETRY
+   Every control and container uses square corners. Only things that are
+   genuinely round (avatars, the crest, status dots, spinners, radio buttons,
+   switches) keep their circle.
+   ========================================================================== */
+*, *::before, *::after { border-radius: 0 !important; }
+.rounded-circle, .user-avatar, .brand-crest, .chart-empty,
+.spinner-border, .spinner-grow, .form-check-input[type='radio'],
+.notif-dot, .status-dot { border-radius: 50% !important; }
+.form-switch .form-check-input { border-radius: 2em !important; }
+.main-wrapper .card .rounded-circle:is(.p-2,.p-3,.p-1,[class*='p-2'],[class*='p-3']):not(img) { border-radius: 0 !important; }
+
+/* ==========================================================================
+   MOTION: short, quiet and purposeful. Content settles in, controls respond.
+   ========================================================================== */
+@keyframes ttsRise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes ttsFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ttsSweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Page content settles in on each route change (Outlet remounts) */
+.main-wrapper > * { animation: ttsRise .32s cubic-bezier(.2,.7,.2,1) both; }
+
+/* Tiles and cards arrive in a short stagger */
+.stat-tile, .module-tile, .section-card { animation: ttsRise .38s cubic-bezier(.2,.7,.2,1) both; }
+.row > :nth-child(2) > :is(.stat-tile,.module-tile,.section-card), .row > :nth-child(2):is(.stat-tile,.module-tile,.section-card) { animation-delay: .04s; }
+.row > :nth-child(3) > :is(.stat-tile,.module-tile,.section-card), .row > :nth-child(3):is(.stat-tile,.module-tile,.section-card) { animation-delay: .08s; }
+.row > :nth-child(4) > :is(.stat-tile,.module-tile,.section-card), .row > :nth-child(4):is(.stat-tile,.module-tile,.section-card) { animation-delay: .12s; }
+.row > :nth-child(5) > :is(.stat-tile,.module-tile,.section-card), .row > :nth-child(5):is(.stat-tile,.module-tile,.section-card) { animation-delay: .16s; }
+.row > :nth-child(n+6) > :is(.stat-tile,.module-tile,.section-card), .row > :nth-child(n+6):is(.stat-tile,.module-tile,.section-card) { animation-delay: .2s; }
+
+/* Page eyebrow gets a brass rule that draws in */
+.page-header .page-eyebrow { position: relative; display: inline-block; padding-bottom: 3px; }
+.page-header .page-eyebrow::after {
+  content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 2px;
+  background: var(--brass); transform-origin: left; animation: ttsSweep .5s .1s cubic-bezier(.2,.7,.2,1) both;
+}
+
+/* Buttons: colour eases, a brass underline slides in on hover, press sinks 1px */
+.btn { position: relative; transition: background-color .16s ease, border-color .16s ease, color .16s ease, transform .08s ease; }
+.btn:not(.btn-link):not(.btn-close)::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--brass); transform: scaleX(0); transform-origin: left;
+  transition: transform .22s cubic-bezier(.2,.7,.2,1); pointer-events: none;
+}
+.btn:not(.btn-link):not(.btn-close):not(:disabled):hover::after { transform: scaleX(1); }
+.btn-brass::after, .btn-info::after { background: var(--navy-900) !important; }
+.btn:not(:disabled):active { transform: translateY(1px); }
+.btn.dropdown-toggle::after { position: static; height: auto; background: none; transform: none; transition: none; }
+
+/* Tiles: brass edge grows on hover */
+.module-tile { position: relative; transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.module-tile::before {
+  content: ''; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 3px;
+  background: var(--brass); transform: scaleY(0); transform-origin: bottom; transition: transform .22s cubic-bezier(.2,.7,.2,1);
+}
+.module-tile:hover:not(.is-locked)::before { transform: scaleY(1); }
+.module-tile:hover:not(.is-locked) { transform: translateY(-2px); }
+.module-tile .module-tile-icon { transition: background-color .18s ease, color .18s ease; }
+.module-tile:hover:not(.is-locked) .module-tile-icon { background: var(--color-primary); color: #fff; }
+.stat-tile-link { transition: border-color .18s ease, transform .18s ease; }
+.stat-tile-link:hover { transform: translateY(-2px); }
+
+/* Sidebar links nudge, icon buttons respond */
+.slaf-sidebar .nav-link { transition: background-color .15s ease, color .15s ease, padding-left .15s ease; }
+.slaf-sidebar:not(.collapsed) .nav-link:not(.active):hover { padding-left: 16px; }
+.icon-btn { transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+.icon-btn:active { transform: translateY(1px); }
+
+/* Inputs: focus ring eases in */
+.form-control, .form-select { transition: border-color .15s ease, box-shadow .15s ease; }
+
+/* Table rows highlight gently */
+.table > tbody > tr > * { transition: background-color .12s ease; }
+
+/* Overlays */
+.modal.show .modal-dialog { animation: ttsRise .22s cubic-bezier(.2,.7,.2,1) both; }
+.notif-panel { animation: ttsRise .18s ease-out both; }
+.dropdown-menu.show { animation: ttsFade .14s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .main-wrapper > *, .stat-tile, .module-tile, .section-card, .modal.show .modal-dialog, .notif-panel { animation: none !important; }
+  .module-tile:hover, .stat-tile-link:hover { transform: none !important; }
+}
+
+/* ==========================================================================
+   APP-LIKE TOUCH BEHAVIOUR (phones, and when installed from Chrome)
+   ========================================================================== */
+.sidebar-install-btn { color: #e2c48c; }
+html { -webkit-tap-highlight-color: transparent; }
+button, a, .btn, .nav-link, label, select, summary { touch-action: manipulation; }
+@media (display-mode: standalone) {
+  body { overscroll-behavior-y: none; }
+  .app-navbar, .slaf-sidebar { user-select: none; -webkit-user-select: none; }
+}
+@media (max-width: 575.98px) {
+  /* 16px stops iOS from zooming the page when a field is focused */
+  .form-control, .form-select, input, select, textarea { font-size: 16px !important; }
+}
+@media (max-width: 575.98px) {
+  /* Large gutters are wider than the phone container padding: keep rows inside the screen */
+  .row.g-5, .row.gx-5 { --bs-gutter-x: 1.5rem; }
+  .row.g-5, .row.gy-5 { --bs-gutter-y: 2rem; }
+}
+.report-search { width: 280px; max-width: 100%; }
+@media (max-width: 575.98px) { .report-search { width: 100%; } }
+
+/* Mobile bottom tab bar */
+.mobile-tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 1030;
+  display: flex; background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  box-shadow: 0 -4px 16px rgba(12, 31, 59, .06);
+}
+.mobile-tab {
+  flex: 1 1 0; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  height: 58px; padding: 0 2px;
+  background: none; border: 0; position: relative;
+  color: var(--color-text-muted); text-decoration: none;
+  font-size: .68rem; font-weight: 500;
+  transition: color .15s ease;
+}
+.mobile-tab i { font-size: 1.2rem; line-height: 1; transition: transform .18s cubic-bezier(.2,.7,.2,1); }
+.mobile-tab span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.mobile-tab::before {
+  content: ''; position: absolute; top: -1px; left: 22%; right: 22%; height: 3px;
+  background: var(--brass); transform: scaleX(0); transition: transform .22s cubic-bezier(.2,.7,.2,1);
+}
+.mobile-tab.active { color: var(--color-primary); }
+.mobile-tab.active::before { transform: scaleX(1); }
+.mobile-tab.active i { transform: translateY(-1px); }
+.mobile-tab:active i { transform: scale(.9); }
+[data-theme='dark'] .mobile-tab.active { color: #9dbbe8; }
+@media (max-width: 991.98px) {
+  .main-wrapper { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+@media print { .mobile-tabbar { display: none !important; } }
+@media (max-width: 991.98px) {
+  body:has(.mobile-tabbar) .Toastify__toast-container--bottom-right,
+  body:has(.mobile-tabbar) .Toastify__toast-container--bottom-center,
+  body:has(.mobile-tabbar) .Toastify__toast-container--bottom-left { bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+
+/* ==========================================================================
+   TYPE: Roboto for reading, Roboto Condensed for titles and figures
+   ========================================================================== */
+.hero-title { font-size: clamp(2.3rem, 5.5vw, 4rem); font-weight: 700; line-height: 1.02; }
+.section-title { font-size: clamp(1.75rem, 3.2vw, 2.5rem); font-weight: 600; line-height: 1.08; }
+.page-title, .navbar-title, .section-card-title, .modal-title { font-family: var(--font-display); letter-spacing: 0.005em; }
+.page-title { font-size: 1.7rem; }
+.navbar-title { font-size: 1.2rem; }
+.section-card-title { font-size: 1.08rem; }
+.stat-tile .stat-value, .stat-strip-value, .submission-value, .stat-value-lg {
+  font-family: var(--font-display); font-weight: 600; letter-spacing: 0;
+}
+.stat-tile .stat-value { font-size: 2.05rem; }
+.stat-strip-value { font-size: 2.3rem; }
+.sidebar-brand-title, .site-brand-title { font-family: var(--font-display); font-size: 1.02rem; letter-spacing: .01em; }
+.page-eyebrow, .section-eyebrow, .hero-kicker, .sidebar-module-header {
+  font-family: var(--font-display); letter-spacing: .12em !important; font-weight: 600;
+}
+.page-eyebrow { font-size: .78rem; }
+.btn { letter-spacing: .005em; }
+.table > thead th { font-family: var(--font-display); font-size: .82rem; letter-spacing: .04em; }
+
+/* Sidebar: uppercase labels in the display face */
+.slaf-sidebar .nav-link span,
+.slaf-sidebar .sidebar-footer-text:not(.sidebar-version),
+.slaf-sidebar .sidebar-brand-title {
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  letter-spacing: .06em;
+}
+.slaf-sidebar .nav-link span { font-size: .86rem; font-weight: 600; }
+.slaf-sidebar .sidebar-brand-title { font-size: .98rem; letter-spacing: .05em; }
+
+/* ==========================================================================
+   SIGN-IN SLIDESHOW: three photos, slow zoom, 2s cross-fade, 27s cycle.
+   Each slide: fade in 2s, hold 7s, fade out 2s while the next fades in.
+   ========================================================================== */
+.auth-slides { position: absolute; inset: 0; overflow: hidden; background: var(--navy-950); }
+.auth-slide {
+  position: absolute; inset: -2%;
+  background-size: cover; background-position: center;
+  opacity: 0;
+  will-change: opacity, transform;
+  animation: ttsSlide 27s linear infinite both;
+}
+.auth-slide.s1 { animation-delay: -2s; transform-origin: 60% 50%; }
+.auth-slide.s2 { animation-delay: 7s; transform-origin: 35% 45%; background-position: 40% center; }
+.auth-slide.s3 { animation-delay: 16s; transform-origin: 50% 60%; }
+@keyframes ttsSlide {
+  0%    { opacity: 0; transform: scale(1.02) translate3d(0, 0, 0); }
+  7.4%  { opacity: 1; }
+  33.3% { opacity: 1; }
+  40.7% { opacity: 0; transform: scale(1.14) translate3d(-1.2%, -0.8%, 0); }
+  100%  { opacity: 0; transform: scale(1.14) translate3d(-1.2%, -0.8%, 0); }
+}
+
+/* Progress bars under the quote, in step with the photos */
+.auth-slide-bars { display: flex; gap: 6px; margin-top: 1.4rem; max-width: 180px; }
+.auth-slide-bars span { flex: 1; height: 3px; background: rgba(255,255,255,.22); position: relative; overflow: hidden; }
+.auth-slide-bars span::after {
+  content: ''; position: absolute; inset: 0; background: var(--brass);
+  transform: scaleX(0); transform-origin: left;
+  animation: ttsSlideBar 27s linear infinite both;
+}
+.auth-slide-bars .s1::after { animation-delay: -2s; }
+.auth-slide-bars .s2::after { animation-delay: 7s; }
+.auth-slide-bars .s3::after { animation-delay: 16s; }
+@keyframes ttsSlideBar {
+  0%    { transform: scaleX(0); opacity: 1; }
+  40.7% { transform: scaleX(1); opacity: 1; }
+  44%   { transform: scaleX(1); opacity: 0; }
+  100%  { transform: scaleX(0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-slide, .auth-slide-bars span::after { animation: none !important; }
+  .auth-slide.s1 { opacity: 1; }
+}
+
+/* Brand subtitle "Sri Lanka Air Force": readable over photos and on navy */
+.sidebar-brand-sub { color: #fff; font-weight: 600; }
+.auth-visual .sidebar-brand-sub,
+.site-nav:not(.is-solid) .site-brand-sub {
+  color: #fff; font-weight: 600; letter-spacing: .08em;
+  text-shadow: 0 1px 3px rgba(4, 12, 26, .85);
+}
+.auth-visual .sidebar-brand-title,
+.site-nav:not(.is-solid) .site-brand-title { text-shadow: 0 1px 3px rgba(4, 12, 26, .7); }
+/* Darker band behind the brand at the top of the sign-in photo */
+.auth-visual .hero-scrim { background: linear-gradient(180deg, rgba(8,22,43,.8) 0%, rgba(8,22,43,.35) 22%, rgba(8,22,43,.45) 55%, rgba(8,22,43,.92) 100%); }

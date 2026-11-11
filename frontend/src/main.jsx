@@ -22,3 +22,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </QueryClientProvider>
   </React.StrictMode>,
 )
+
+// Installable app: register the service worker in production builds only,
+// so the Vite dev server's hot reload is never intercepted.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {})
+  })
+}

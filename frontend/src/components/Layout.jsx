@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
+import MobileTabBar from './MobileTabBar'
 
 export const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [isCollapsed, setIsCollapsed] = useState(true) // Default compressed on landing time
+  // Sidebar shows icons with labels by default; the user's choice is remembered on this device
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    try { return localStorage.getItem('tts.sidebarCollapsed') === '1' } catch { return false }
+  })
+  useEffect(() => {
+    try { localStorage.setItem('tts.sidebarCollapsed', isCollapsed ? '1' : '0') } catch { /* storage unavailable */ }
+  }, [isCollapsed])
   const location = useLocation()
 
   // Close mobile sidebar automatically whenever location changes
@@ -41,6 +48,7 @@ export const Layout = () => {
         <main className={`main-wrapper px-3 px-md-4 pb-4 flex-grow-1 ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
           <Outlet />
         </main>
+        <MobileTabBar onOpenMenu={() => setSidebarOpen(true)} />
       </div>
     </div>
   )

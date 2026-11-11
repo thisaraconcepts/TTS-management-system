@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useInstallPrompt } from '../utils/installPrompt'
 
 export const Login = () => {
   const { login } = useAuth()
@@ -10,6 +11,7 @@ export const Login = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [canInstall, promptInstall] = useInstallPrompt()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -29,11 +31,16 @@ export const Login = () => {
     <div className="auth-shell">
       {/* Visual side */}
       <aside className="auth-visual">
-        <div className="hero-media" style={{ backgroundImage: 'url(/images/tts-building.jpg)' }} aria-hidden="true"></div>
+        {/* Slow cross-fading slideshow of the school (pure CSS, see .auth-slides) */}
+        <div className="auth-slides" aria-hidden="true">
+          <div className="auth-slide s1" style={{ backgroundImage: 'url(/images/tts-building.jpg)' }}></div>
+          <div className="auth-slide s2" style={{ backgroundImage: 'url(/images/tts-monument.jpg)' }}></div>
+          <div className="auth-slide s3" style={{ backgroundImage: 'url(/images/tts-gate.jpg)' }}></div>
+        </div>
         <div className="hero-scrim" aria-hidden="true"></div>
 
         <Link to="/" className="auth-layer d-flex align-items-center gap-2 text-decoration-none">
-          <span className="sidebar-brand-mark">TTS</span>
+          <img className="sidebar-brand-mark brand-crest" src="/images/tts-crest.jpg" alt="TTS Ekala crest" />
           <span>
             <span className="sidebar-brand-title d-block">Trade Training School</span>
             <span className="sidebar-brand-sub d-block">Sri Lanka Air Force</span>
@@ -45,12 +52,16 @@ export const Login = () => {
           <p className="font-serif mt-3 mb-0" style={{ fontSize: '1.35rem', lineHeight: 1.45 }}>
             “To develop knowledge, skills, talents and attitudes of all tradesmen in SLAF.”
           </p>
+          <div className="auth-slide-bars" aria-hidden="true">
+            <span className="s1"></span><span className="s2"></span><span className="s3"></span>
+          </div>
         </div>
       </aside>
 
       {/* Form side */}
       <main className="auth-panel">
         <div className="auth-form fade-in-slide">
+          <img src="/images/tts-crest.jpg" alt="TTS Ekala crest" className="auth-crest mb-3" />
           <span className="page-eyebrow">TTS Portal</span>
           <h1 className="h3 mt-1 mb-1 fw-semibold">Sign in</h1>
           <p className="text-muted mb-4" style={{ fontSize: '0.9rem' }}>
@@ -113,9 +124,16 @@ export const Login = () => {
             <span>Sign-ins are recorded. Forgotten your password? Contact the system administrator.</span>
           </div>
 
-          <Link to="/" className="d-inline-flex align-items-center gap-1 mt-3 text-decoration-none small">
-            <i className="bi bi-arrow-left"></i> Back to home
-          </Link>
+          <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3">
+            <Link to="/" className="d-inline-flex align-items-center gap-1 text-decoration-none small">
+              <i className="bi bi-arrow-left"></i> Back to home
+            </Link>
+            {canInstall && (
+              <button type="button" className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" onClick={promptInstall}>
+                <i className="bi bi-phone"></i> Install app
+              </button>
+            )}
+          </div>
         </div>
       </main>
     </div>

@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
+import { useInstallPrompt } from '../utils/installPrompt'
 import { toast } from 'react-toastify'
 
 export const Landing = () => {
   const { user, token } = useAuth()
   const { theme, toggleTheme } = useTheme()
+  const [canInstall, promptInstall] = useInstallPrompt()
   const navigate = useNavigate()
 
   const [stats, setStats] = useState({
@@ -213,7 +215,7 @@ export const Landing = () => {
       <header className={`site-nav ${navSolid ? 'is-solid' : ''}`} ref={navRef}>
         <div className="container d-flex align-items-center justify-content-between" style={{ height: 68 }}>
           <button className="site-brand" onClick={() => handleNavClick('hero')} aria-label="Back to top">
-            <span className="sidebar-brand-mark">TTS</span>
+            <img className="sidebar-brand-mark brand-crest" src="/images/tts-crest.jpg" alt="TTS Ekala crest" />
             <span>
               <span className="site-brand-title d-block">Trade Training School</span>
               <span className="site-brand-sub d-block">Sri Lanka Air Force</span>
@@ -262,6 +264,15 @@ export const Landing = () => {
               ) : (
                 <Link to="/login" onClick={() => setIsNavOpen(false)} className="btn btn-primary w-100">Sign in</Link>
               )}
+              {canInstall && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary w-100 mt-2 d-inline-flex align-items-center justify-content-center gap-2"
+                  onClick={() => { setIsNavOpen(false); promptInstall() }}
+                >
+                  <i className="bi bi-phone"></i> Install app
+                </button>
+              )}
             </div>
           </div>
         )}
@@ -275,8 +286,7 @@ export const Landing = () => {
           <span className="hero-kicker">SLAF Trade Training School · Ekala</span>
           <h1 className="hero-title">Training the tradesmen who keep the Air Force flying.</h1>
           <p className="hero-lead">
-            The TTS Portal brings trainee records, daily parade state, accommodation and academic
-            work into one place — for instructors, section staff and the command.
+            The TTS Portal brings trainee records, daily parade state, accommodation and academic work into one place — for instructors, section staff and the command.
           </p>
           <div className="d-flex flex-column flex-sm-row gap-2 gap-sm-3">
             {token && user ? (
@@ -321,13 +331,10 @@ export const Landing = () => {
               <span className="section-eyebrow">About the school</span>
               <h2 className="section-title">Where every SLAF tradesman begins.</h2>
               <p className="section-lead">
-                The Trade Training School prepares airmen across the Air Force's technical and
-                administrative trades. This portal replaces paper registers and scattered
-                spreadsheets with one secure record that every section works from.
+                The Trade Training School prepares airmen across the Air Force's technical and administrative trades. This portal replaces paper registers and scattered spreadsheets with one secure record that every section works from.
               </p>
               <blockquote className="vision-quote">
-                “To be an exemplary station by creating a stimulating and a challenging environment
-                to develop knowledge, skills, talents and attitudes of all tradesmen in SLAF.”
+                “To be an exemplary station by creating a stimulating and a challenging environment to develop knowledge, skills, talents and attitudes of all tradesmen in SLAF.”
                 <cite>Dream of TTS</cite>
               </blockquote>
               <ul className="fact-list">
@@ -366,8 +373,7 @@ export const Landing = () => {
             </div>
             <div className="col-lg-5">
               <p className="text-muted mb-0">
-                Choose a module to open it. You'll be asked to sign in first, and you'll only see
-                the modules your role allows.
+                Choose a module to open it. You'll be asked to sign in first, and you'll only see the modules your role allows.
               </p>
             </div>
           </div>
@@ -393,8 +399,7 @@ export const Landing = () => {
               <span className="section-eyebrow">Notice board</span>
               <h2 className="section-title">Circulars & announcements</h2>
               <p className="text-muted">
-                Notices issued by the Commandant's office and section heads. Alerts and warnings
-                need action — please read them first.
+                Notices issued by the Commandant's office and section heads. Alerts and warnings need action — please read them first.
               </p>
               <div className="d-flex gap-2 align-items-start small text-muted border-top pt-3 mt-4">
                 <i className="bi bi-shield-check text-brass"></i>
@@ -474,7 +479,7 @@ export const Landing = () => {
           <div className="row g-4">
             <div className="col-lg-4">
               <div className="d-flex align-items-center gap-2 mb-3">
-                <span className="sidebar-brand-mark">TTS</span>
+                <img className="sidebar-brand-mark brand-crest" src="/images/tts-crest.jpg" alt="TTS Ekala crest" />
                 <span>
                   <span className="sidebar-brand-title d-block">Trade Training School</span>
                   <span className="sidebar-brand-sub d-block">Sri Lanka Air Force</span>

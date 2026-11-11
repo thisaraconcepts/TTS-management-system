@@ -1,8 +1,10 @@
 import React from 'react'
 import { NavLink, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useInstallPrompt } from '../utils/installPrompt'
 
 export const Sidebar = ({ isOpen, onClose, isCollapsed, onToggleCollapse }) => {
+  const [canInstall, promptInstall] = useInstallPrompt()
   const { hasPermission, hasRole } = useAuth()
   const location = useLocation()
   const path = location.pathname
@@ -396,7 +398,7 @@ export const Sidebar = ({ isOpen, onClose, isCollapsed, onToggleCollapse }) => {
         {/* Brand */}
         <div className="d-flex align-items-center position-relative">
           <Link to="/dashboard" className="sidebar-brand flex-grow-1" title="TTS Portal home">
-            <span className="sidebar-brand-mark">TTS</span>
+            <img className="sidebar-brand-mark brand-crest" src="/images/tts-crest.jpg" alt="TTS Ekala crest" />
             <span className="sidebar-header-text">
               <span className="sidebar-brand-title d-block">Trade Training School</span>
               <span className="sidebar-brand-sub d-block">Sri Lanka Air Force</span>
@@ -421,6 +423,16 @@ export const Sidebar = ({ isOpen, onClose, isCollapsed, onToggleCollapse }) => {
 
         {/* Footer: collapse toggle (desktop) + version */}
         <div className="sidebar-foot">
+          {canInstall && (
+            <button
+              className="sidebar-collapse-btn sidebar-install-btn d-flex"
+              onClick={promptInstall}
+              title="Install TTS Portal as an app"
+            >
+              <i className="bi bi-phone"></i>
+              <span className="sidebar-footer-text">Install app</span>
+            </button>
+          )}
           <button
             className="sidebar-collapse-btn d-none d-lg-flex"
             onClick={onToggleCollapse}

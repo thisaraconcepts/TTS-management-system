@@ -769,11 +769,11 @@ export const ReportGenerator = () => {
 
 
       {/* Filter / Search within preview table */}
-      <div className="d-flex justify-content-between align-items-center mb-2 px-1 no-print">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center gap-2 mb-2 px-1 no-print">
         <div className="small text-muted">
           Showing <strong>{filteredRows.length}</strong> of <strong>{reportData?.total_records || 0}</strong> compiled records • Formal A4 Preview ({orientation.toUpperCase()})
         </div>
-        <div style={{ width: '280px' }}>
+        <div className="report-search">
           <input
             type="text"
             className="form-control form-control-sm"
