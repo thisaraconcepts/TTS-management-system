@@ -66,7 +66,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
       </div>
 
       {/* Summary tiles */}
-      <div className="row g-3 mb-4 row-cols-2 row-cols-md-3 row-cols-xl-5">
+      <div className="row g-3 mb-4 row-cols-2 row-cols-md-3">
         {[
           { label: 'Trades', value: stats.total_trades, foot: 'Technical categories', icon: 'bi-wrench-adjustable', to: 'trades' },
           { label: 'Courses', value: stats.total_courses, foot: 'Basic & advanced', icon: 'bi-book-half', to: 'courses' },
@@ -74,8 +74,7 @@ export const AcademicDashboard = ({ onNavigate }) => {
           { label: 'Active instructors', value: stats.active_instructors, foot: 'Portal users', icon: 'bi-person-badge', to: 'instructors' },
           { label: 'Active trainees', value: stats.active_students, foot: 'From trainee records', icon: 'bi-people' },
           { label: 'Available classrooms', value: stats.available_classrooms, foot: `${stats.classroom_utilization_rate}% occupancy`, icon: 'bi-door-open', to: 'classrooms' },
-          { label: 'Upcoming phase tests', value: stats.upcoming_phase_tests, foot: 'Scheduled', icon: 'bi-journal-check', to: 'phase-tests', tone: stats.upcoming_phase_tests ? 'accent-warning' : '' },
-          { label: 'Final examinations', value: stats.upcoming_final_exams, foot: 'Passing-out exams', icon: 'bi-award', to: 'final-exams' },
+          { label: 'Examinations & tests', value: (Number(stats.upcoming_phase_tests) || 0) + (Number(stats.upcoming_final_exams) || 0), foot: `${stats.upcoming_phase_tests || 0} phase · ${stats.upcoming_final_exams || 0} final`, icon: 'bi-award', to: 'examinations', tone: stats.upcoming_phase_tests ? 'accent-warning' : '' },
           { label: 'Course calendars', value: stats.total_courses || 0, foot: 'View master calendars', icon: 'bi-calendar-range', to: 'calendar' },
           { label: 'Pending instructors', value: stats.pending_instructor_assignments || 0, foot: 'Nomination pending', icon: 'bi-person-exclamation', to: 'calendar', tone: stats.pending_instructor_assignments ? 'accent-danger' : '' },
         ].map((t) => (

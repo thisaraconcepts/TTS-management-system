@@ -5,7 +5,13 @@ import { ClassroomAttendanceRegister } from './ClassroomAttendanceRegister'
 import { ClassicalReportModal } from '../../components/ClassicalReportModal'
 
 export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
-  const [activeSubTab, setActiveSubTab] = useState(initialTab)
+  const normalizedInitialTab = ['phase-tests', 'final-exams', 'examinations'].includes(initialTab)
+    ? 'examinations'
+    : initialTab
+  const [activeSubTab, setActiveSubTab] = useState(normalizedInitialTab)
+  const [examTypeFilter, setExamTypeFilter] = useState(
+    initialTab === 'final-exams' ? 'Final Exam' : initialTab === 'phase-tests' ? 'Phase Test' : 'ALL'
+  )
   const [courses, setCourses] = useState([])
   const [selectedCourseId, setSelectedCourseId] = useState('')
   const [exams, setExams] = useState([])
@@ -187,7 +193,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
       setExamForm({
         course_id: initialCourseId,
         subject_id: '',
-        type: activeSubTab === 'final-exams' ? 'Final Exam' : 'Phase Test',
+        type: examTypeFilter === 'Final Exam' ? 'Final Exam' : 'Phase Test',
         date: new Date().toISOString().split('T')[0],
         max_marks: 100,
         pass_marks: 50
@@ -226,7 +232,14 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
   }, [selectedCourseId])
 
   useEffect(() => {
-    setActiveSubTab(initialTab)
+    if (['phase-tests', 'final-exams', 'examinations'].includes(initialTab)) {
+      setActiveSubTab('examinations')
+      if (initialTab === 'final-exams') setExamTypeFilter('Final Exam')
+      else if (initialTab === 'phase-tests') setExamTypeFilter('Phase Test')
+      else setExamTypeFilter('ALL')
+    } else if (initialTab) {
+      setActiveSubTab(initialTab)
+    }
   }, [initialTab])
 
   const handleCreateExam = async (e) => {
@@ -421,6 +434,11 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
   // Filtered list of exams for main tabs
   const filteredExams = exams.filter(ex => {
+    if (activeSubTab === 'examinations') {
+      if (examTypeFilter === 'Phase Test') return ex.type === 'Phase Test'
+      if (examTypeFilter === 'Final Exam') return ex.type === 'Final Exam'
+      return true
+    }
     if (activeSubTab === 'phase-tests') return ex.type === 'Phase Test'
     if (activeSubTab === 'final-exams') return ex.type === 'Final Exam'
     return true
@@ -642,7 +660,7 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
             </select>
           </div>
           <div className="col-12 col-sm-4 col-md-3 text-start text-sm-end">
-            {(activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
+            {(activeSubTab === 'examinations' || activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
               <button className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto" onClick={handleOpenExamModal}>
                 <i className="bi bi-journal-plus me-1"></i> Schedule Exam
               </button>
@@ -659,13 +677,8 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
           </button>
         </li>
         <li className="nav-item">
-          <button className={`nav-link btn-sm ${activeSubTab === 'phase-tests' ? 'active fw-bold' : ''}`} onClick={() => setActiveSubTab('phase-tests')}>
-            <i className="bi bi-file-earmark-code me-1.5"></i> Phase Tests
-          </button>
-        </li>
-        <li className="nav-item">
-          <button className={`nav-link btn-sm ${activeSubTab === 'final-exams' ? 'active fw-bold' : ''}`} onClick={() => setActiveSubTab('final-exams')}>
-            <i className="bi bi-award me-1.5"></i> Final Examinations
+          <button className={`nav-link btn-sm ${['examinations', 'phase-tests', 'final-exams'].includes(activeSubTab) ? 'active fw-bold' : ''}`} onClick={() => setActiveSubTab('examinations')}>
+            <i className="bi bi-award me-1.5"></i> Scheduled Examinations
           </button>
         </li>
         <li className="nav-item">
@@ -680,9 +693,42 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
         <ClassroomAttendanceRegister />
       )}
 
-      {/* Sub Tab 2 & 3: Phase Tests & Final Exams */}
-      {(activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
+      {/* Sub Tab 2: Scheduled Examinations (Phase Tests & Final Exams Combined) */}
+      {(activeSubTab === 'examinations' || activeSubTab === 'phase-tests' || activeSubTab === 'final-exams') && (
         <div className="card slaf-card p-0 shadow-sm border-0">
+          {/* Quick Filter Bar */}
+          <div className="p-3 border-bottom bg-light-subtle d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div className="d-flex align-items-center flex-wrap gap-2">
+              <span className="small fw-bold text-muted text-uppercase me-1">Filter by Type:</span>
+              <div className="btn-group btn-group-sm" role="group">
+                <button
+                  type="button"
+                  className={`btn ${examTypeFilter === 'ALL' ? 'btn-primary fw-bold' : 'btn-outline-secondary'}`}
+                  onClick={() => setExamTypeFilter('ALL')}
+                >
+                  All ({exams.length})
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${examTypeFilter === 'Phase Test' ? 'btn-danger fw-bold text-white' : 'btn-outline-secondary'}`}
+                  onClick={() => setExamTypeFilter('Phase Test')}
+                >
+                  Phase Tests ({exams.filter(e => e.type === 'Phase Test').length})
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${examTypeFilter === 'Final Exam' ? 'btn-dark fw-bold text-white' : 'btn-outline-secondary'}`}
+                  onClick={() => setExamTypeFilter('Final Exam')}
+                >
+                  Final Exams ({exams.filter(e => e.type === 'Final Exam').length})
+                </button>
+              </div>
+            </div>
+            <div className="small text-muted">
+              Showing <strong>{filteredExams.length}</strong> of <strong>{exams.length}</strong> scheduled examinations
+            </div>
+          </div>
+
           <div className="table-responsive">
             <table className="table slaf-table align-middle mb-0">
               <thead className="bg-light">
@@ -703,7 +749,16 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                 ) : (
                   filteredExams.map(ex => (
                     <tr key={ex.id}>
-                      <td><span className="badge bg-primary-subtle text-primary border fw-bold">{ex.type}</span></td>
+                      <td>
+                        <span className={`badge border fw-bold ${
+                          ex.type === 'Final Exam' 
+                            ? 'bg-dark-subtle text-dark border-dark' 
+                            : 'bg-danger-subtle text-danger border-danger'
+                        }`}>
+                          <i className={`bi ${ex.type === 'Final Exam' ? 'bi-award-fill' : 'bi-journal-check'} me-1`}></i>
+                          {ex.type}
+                        </span>
+                      </td>
                       <td><strong className="text-dark">{ex.subject_name}</strong></td>
                       <td><small className="text-muted"><i className="bi bi-calendar-event me-1 text-primary"></i>{ex.date}</small></td>
                       <td><span className="badge bg-secondary-subtle text-dark border">{ex.max_marks} Marks</span></td>
@@ -775,22 +830,63 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
       {/* Create Exam Modal */}
       {showExamModal && (
-        <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
-          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content slaf-card shadow-lg border-0">
-              <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between">
+        <div
+          className="modal fade show d-block"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            zIndex: 1060,
+            overflowY: 'auto',
+            padding: '12px'
+          }}
+          tabIndex="-1"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="modal-dialog"
+            style={{
+              maxWidth: '560px',
+              width: '100%',
+              height: 'calc(100vh - 24px)',
+              maxHeight: '580px',
+              margin: 'auto',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            <form
+              onSubmit={handleCreateExam}
+              className="modal-content slaf-card shadow-2xl border-0"
+              style={{
+                height: '100%',
+                maxHeight: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                borderRadius: '12px'
+              }}
+            >
+              <div className="modal-header border-bottom bg-light-subtle d-flex align-items-center justify-content-between flex-shrink-0 py-2.5 px-3 px-md-4">
                 <div>
-                  <h5 className="modal-title display-font text-primary fw-bold mb-0">
+                  <h5 className="modal-title display-font text-primary fw-bold mb-0 fs-6">
                     <i className="bi bi-calendar-plus me-2"></i>Schedule Examination
                   </h5>
-                  <small className="text-muted" style={{ fontSize: '0.78rem' }}>
+                  <small className="text-muted" style={{ fontSize: '0.75rem' }}>
                     Select an ongoing training course and its assigned syllabus subject/module
                   </small>
                 </div>
                 <button type="button" className="btn-close" onClick={() => setShowExamModal(false)} aria-label="Close"></button>
               </div>
-              <form onSubmit={handleCreateExam}>
-                <div className="modal-body p-3 p-md-4">
+
+              <div
+                className="modal-body p-3 px-md-4 py-md-3"
+                style={{
+                  flex: '1 1 auto',
+                  minHeight: 0,
+                  overflowY: 'auto',
+                  overscrollBehavior: 'contain'
+                }}
+              >
                   {/* Ongoing Course Selector */}
                   <div className="mb-3">
                     <div className="d-flex justify-content-between align-items-center mb-1">
@@ -978,10 +1074,13 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </div>
                 </div>
 
-                <div className="modal-footer border-top bg-light-subtle d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
+                <div
+                  className="modal-footer border-top bg-light-subtle d-flex flex-row justify-content-end align-items-center gap-2 flex-shrink-0 py-2.5 px-3 px-md-4"
+                  style={{ minHeight: '52px' }}
+                >
                   <button
                     type="button"
-                    className="btn btn-outline-secondary btn-sm w-100 w-sm-auto"
+                    className="btn btn-outline-secondary btn-sm px-3 fw-semibold"
                     onClick={() => setShowExamModal(false)}
                     disabled={submittingExam}
                   >
@@ -989,24 +1088,28 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-primary btn-sm fw-semibold shadow-sm w-100 w-sm-auto"
+                    className="btn btn-primary btn-sm fw-bold shadow-sm px-3 py-1.5 d-inline-flex align-items-center justify-content-center gap-1.5"
                     disabled={submittingExam || loadingCourses || loadingModalSubjects || !examForm.course_id || !examForm.subject_id || modalSubjects.length === 0}
+                    style={{
+                      background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+                      border: 'none',
+                      minHeight: '34px'
+                    }}
                   >
                     {submittingExam ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                        Scheduling Exam...
+                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Scheduling Exam...</span>
                       </>
                     ) : (
                       <>
-                        <i className="bi bi-calendar-check me-1"></i>
-                        Schedule Exam
+                        <i className="bi bi-calendar-check-fill"></i>
+                        <span>Schedule Examination</span>
                       </>
                     )}
                   </button>
                 </div>
               </form>
-            </div>
           </div>
         </div>
       )}
@@ -1495,17 +1598,58 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
 
       {/* Controlled Officer Override Modal */}
       {showOverrideModal && overrideStudent && (
-        <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.65)', zIndex: 1070 }}>
-          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div className="modal-content slaf-card shadow-lg border-0">
-              <div className="modal-header border-bottom bg-warning-subtle py-2.5 px-3">
+        <div
+          className="modal fade show d-block"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            zIndex: 1070,
+            overflowY: 'auto',
+            padding: '12px'
+          }}
+          tabIndex="-1"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="modal-dialog"
+            style={{
+              maxWidth: '560px',
+              width: '100%',
+              height: 'calc(100vh - 24px)',
+              maxHeight: '580px',
+              margin: 'auto',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+          >
+            <form
+              onSubmit={handleSubmitOverride}
+              className="modal-content slaf-card shadow-2xl border-0"
+              style={{
+                height: '100%',
+                maxHeight: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                borderRadius: '12px'
+              }}
+            >
+              <div className="modal-header border-bottom bg-warning-subtle py-2.5 px-3 flex-shrink-0">
                 <h6 className="modal-title display-font text-dark fw-bold mb-0 text-truncate">
                   <i className="bi bi-shield-lock-fill text-warning me-2"></i>Authorize Eligibility Override
                 </h6>
                 <button type="button" className="btn-close" onClick={() => setShowOverrideModal(false)}></button>
               </div>
-              <form onSubmit={handleSubmitOverride}>
-                <div className="modal-body p-3">
+
+              <div
+                className="modal-body p-3 px-md-4 py-md-3"
+                style={{
+                  flex: '1 1 auto',
+                  minHeight: 0,
+                  overflowY: 'auto',
+                  overscrollBehavior: 'contain'
+                }}
+              >
                   <div className="alert alert-warning py-2 px-3 mb-3 border" style={{ fontSize: '0.8rem' }}>
                     <i className="bi bi-exclamation-triangle-fill me-1.5"></i>
                     <strong>Official Audit Notice:</strong> This action allows an ineligible trainee (status: <strong>{overrideStudent.parade_state_status}</strong>) to sit the examination. All overrides are permanently recorded in the system audit trail.
@@ -1549,29 +1693,32 @@ export const AssessmentManagement = ({ initialTab = 'attendance' }) => {
                     />
                   </div>
                 </div>
-                <div className="modal-footer border-top bg-light py-2 d-flex flex-column-reverse flex-sm-row justify-content-end gap-2">
-                  <button type="button" className="btn btn-outline-secondary btn-sm w-100 w-sm-auto" onClick={() => setShowOverrideModal(false)}>
+                <div
+                  className="modal-footer border-top bg-light d-flex flex-row justify-content-end align-items-center gap-2 flex-shrink-0 py-2 px-3 px-md-4"
+                  style={{ minHeight: '52px' }}
+                >
+                  <button type="button" className="btn btn-outline-secondary btn-sm px-3 fw-semibold" onClick={() => setShowOverrideModal(false)}>
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn btn-warning btn-sm fw-bold shadow-sm px-3 text-dark w-100 w-sm-auto"
+                    className="btn btn-warning btn-sm fw-bold shadow-sm px-3 py-1.5 text-dark d-inline-flex align-items-center justify-content-center gap-1.5"
                     disabled={submittingOverride}
                   >
                     {submittingOverride ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                        Authorizing...
+                        <span>Authorizing...</span>
                       </>
                     ) : (
                       <>
-                        <i className="bi bi-check-circle-fill me-1"></i> Authorize & Grant Eligibility
+                        <i className="bi bi-shield-check"></i>
+                        <span>Authorize & Grant Eligibility</span>
                       </>
                     )}
                   </button>
                 </div>
               </form>
-            </div>
           </div>
         </div>
       )}

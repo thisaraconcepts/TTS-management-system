@@ -517,7 +517,7 @@ export const Landing = () => {
         </div>
         <div className="footer-bottom">
           <div className="container py-3 d-flex flex-column flex-md-row justify-content-between gap-2">
-            <span>© {new Date().getFullYear()} Sri Lanka Air Force · Trade Training School</span>
+            <span>© {new Date().getFullYear()} Sri Lanka Air Force · Trade Training School · Management Portal 0.9.0-beta</span>
             <button className="link" style={{ fontSize: '.78rem' }} onClick={() => toast.info('Privacy policy is managed under military data acts.')}>
               Privacy policy
             </button>

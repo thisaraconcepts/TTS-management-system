@@ -63,8 +63,9 @@ export const AcademicModule = () => {
       case 'calendar': return { category: 'Training Management', title: 'Course Calendar Management' }
       case 'lesson-plan-docs': return { category: 'Training Management', title: 'Lesson Plan Documents' }
       case 'attendance': return { category: 'Assessment', title: 'Class Attendance Registry' }
-      case 'phase-tests': return { category: 'Assessment', title: 'Phase Tests' }
-      case 'final-exams': return { category: 'Assessment', title: 'Final Examinations' }
+      case 'examinations': return { category: 'Assessment', title: 'Examinations & Tests' }
+      case 'phase-tests': return { category: 'Assessment', title: 'Examinations & Tests' }
+      case 'final-exams': return { category: 'Assessment', title: 'Examinations & Tests' }
       case 'results': return { category: 'Assessment', title: 'Exam Results & Marksheets' }
       case 'academic-reports': return { category: 'Reports', title: 'Academic Summary Reports' }
       case 'classroom-reports': return { category: 'Reports', title: 'Classroom Utilization Reports' }
@@ -283,20 +284,11 @@ export const AcademicModule = () => {
                   </li>
                   <li>
                     <button 
-                      className={`nav-link w-100 text-start d-flex align-items-center gap-2 py-1.5 px-2.5 rounded small ${activeView === 'phase-tests' ? 'active bg-primary text-white fw-semibold' : 'text-secondary hover-bg-light'}`}
-                      onClick={() => handleNavigate('phase-tests')}
-                    >
-                      <i className="bi bi-file-earmark-code me-1"></i>
-                      {!sidebarCollapsed && <span>Phase Tests</span>}
-                    </button>
-                  </li>
-                  <li>
-                    <button 
-                      className={`nav-link w-100 text-start d-flex align-items-center gap-2 py-1.5 px-2.5 rounded small ${activeView === 'final-exams' ? 'active bg-primary text-white fw-semibold' : 'text-secondary hover-bg-light'}`}
-                      onClick={() => handleNavigate('final-exams')}
+                      className={`nav-link w-100 text-start d-flex align-items-center gap-2 py-1.5 px-2.5 rounded small ${['examinations', 'phase-tests', 'final-exams'].includes(activeView) ? 'active bg-primary text-white fw-semibold' : 'text-secondary hover-bg-light'}`}
+                      onClick={() => handleNavigate('examinations')}
                     >
                       <i className="bi bi-award me-1"></i>
-                      {!sidebarCollapsed && <span>Final Examinations</span>}
+                      {!sidebarCollapsed && <span>Examinations & Tests</span>}
                     </button>
                   </li>
                   <li>
@@ -405,8 +397,9 @@ export const AcademicModule = () => {
         {activeView === 'calendar' && <CourseCalendarManagement />}
         {activeView === 'lesson-plan-docs' && <LessonPlanDocuments />}
         {activeView === 'attendance' && <AssessmentManagement initialTab="attendance" />}
-        {activeView === 'phase-tests' && <AssessmentManagement initialTab="phase-tests" />}
-        {activeView === 'final-exams' && <AssessmentManagement initialTab="final-exams" />}
+        {['examinations', 'phase-tests', 'final-exams'].includes(activeView) && (
+          <AssessmentManagement initialTab="examinations" />
+        )}
         {activeView === 'results' && <AssessmentManagement initialTab="results" />}
         {activeView === 'academic-reports' && <AcademicReports initialReportType="trade" />}
         {activeView === 'classroom-reports' && <AcademicReports initialReportType="classroom" />}
